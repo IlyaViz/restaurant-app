@@ -12,21 +12,17 @@ class UserRoleSerializer(serializers.ModelSerializer):
         extra_kwargs = {"role": {"required": True}}
 
     def validate_role(self, value):
-        requested_user_role = self.context["request"].user.role
-        target_user_role = self.instance.role
+        requested_user = self.context["request"].user
+        target_user = self.instance
 
-        role_hierarchy = ["restaurant_owner", "manager", "kitchen_staff", "customer"]
-
-        if role_hierarchy.index(requested_user_role) >= role_hierarchy.index(
-            target_user_role
-        ):
+        if requested_user.level <= target_user.level:
             raise serializers.ValidationError(
                 "You do not have permission to change this user's role."
             )
 
-        if role_hierarchy.index(value) < role_hierarchy.index(requested_user_role):
+        if User.get_role_level(value) > requested_user.level:
             raise serializers.ValidationError(
-                "You cannot assign a role higher than your own."
+                "You cannot assign a role that is equal to or higher than your own."
             )
 
         return value
