@@ -25,6 +25,9 @@ urlpatterns = [
         include(
             [
                 path("account/", include("account.urls")),
+                path("menu/", include("menu.urls")),
+                path("order/", include("order.urls")),
+                path("restaurant/", include("restaurant.urls")),
             ]
         ),
     ),
