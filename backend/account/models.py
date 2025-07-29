@@ -3,21 +3,29 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    USER_ROLES = [
-        ("customer", "Customer"),
-        ("kitchen_staff", "Kitchen Staff"),
-        ("manager", "Manager"),
-        ("restaurant_owner", "Restaurant Owner"),
+    class Role(models.TextChoices):
+        CUSTOMER = "customer", "Customer"
+        KITCHEN_STAFF = "kitchen_staff", "Kitchen Staff"
+        MANAGER = "manager", "Manager"
+        RESTAURANT_OWNER = "owner", "Owner"
+
+    ROLES_HIERARCHY = [
+        Role.CUSTOMER,
+        Role.KITCHEN_STAFF,
+        Role.MANAGER,
+        Role.RESTAURANT_OWNER,
     ]
-    USER_ROLES_HIERARCHY = [tuple[0] for tuple in USER_ROLES]
 
     role = models.CharField(
-        max_length=50, choices=USER_ROLES, null=False, blank=False, default="customer"
+        choices=Role.choices,
+        null=False,
+        blank=False,
+        default=Role.CUSTOMER,
     )
 
     @classmethod
     def get_role_level(cls, role):
-        return cls.USER_ROLES_HIERARCHY.index(role)
+        return cls.ROLES_HIERARCHY.index(role)
 
     @property
     def level(self):
