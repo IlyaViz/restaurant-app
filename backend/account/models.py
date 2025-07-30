@@ -18,8 +18,6 @@ class User(AbstractUser):
 
     role = models.CharField(
         choices=Role.choices,
-        null=False,
-        blank=False,
         default=Role.CUSTOMER,
     )
 
