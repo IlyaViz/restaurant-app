@@ -1,3 +1,10 @@
 from django.contrib import admin
+from restaurant.models import Restaurant, Table
 
-# Register your models here.
+
+admin.site.register(
+    [
+        Restaurant,
+        Table,
+    ]
+)

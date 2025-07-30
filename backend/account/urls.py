@@ -8,13 +8,13 @@ from account.views.list import CustomerListView, KitchenStaffListView, ManagerLi
 urlpatterns = [
     path("register/", RegisterView.as_view(), name="account-register"),
     path("obtain-token/", obtain_auth_token, name="account-obtain-token"),
-    path("customers/", CustomerListView.as_view(), name="account-customer-list"),
+    path("customer/", CustomerListView.as_view(), name="account-customer-list"),
     path(
         "kitchen-staff/",
         KitchenStaffListView.as_view(),
         name="account-kitchen-staff-list",
     ),
-    path("managers/", ManagerListView.as_view(), name="account-manager-list"),
+    path("manager/", ManagerListView.as_view(), name="account-manager-list"),
     path(
         "update-role/<int:pk>/",
         UpdateUserRoleView.as_view(),
