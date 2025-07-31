@@ -27,7 +27,7 @@ class Order(models.Model):
         if self.has_active_products():
             raise ValidationError("Cannot delete order with active products.")
 
-        super().delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
         if self.finished_at and self.has_active_products():
@@ -56,4 +56,4 @@ class OrderProduct(models.Model):
                 "Cannot delete order product that is not draft or pending."
             )
 
-        super().delete(*args, **kwargs)
+        return super().delete(*args, **kwargs)

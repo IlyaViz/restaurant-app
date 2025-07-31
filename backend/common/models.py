@@ -18,7 +18,9 @@ class SoftlyDeletableModel(models.Model):
         abstract = True
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        self.full_clean()
+
+        return super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         self.is_active = False
