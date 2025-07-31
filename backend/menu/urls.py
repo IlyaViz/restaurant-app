@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
-from menu.models import Category, Product
-from menu.views.menu_management import CategoryViewSet, ProductViewSet
+from menu.views.category_viewset import CategoryViewSet
+from menu.views.product_viewset import ProductViewSet
 
 
 router = DefaultRouter()

@@ -3,11 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from menu.models import Category, Product
-from menu.permissions.menu_management import CanManageMenu
-from menu.serializers.menu_management import (
-    CategorySerializer,
-    ProductSerializer,
-)
+from menu.permissions.general_permission import CanManageMenu
+from menu.serializers.category_serializer import CategorySerializer
+from menu.serializers.product_serializer import ProductSerializer
 
 
 class CategoryViewSet(ModelViewSet):
@@ -24,18 +22,7 @@ class CategoryViewSet(ModelViewSet):
     def products(self, request, pk=None):
         instance = self.get_object()
 
-        products = instance.product_set.filter(is_active=True)
+        products = Product.active_objects.filter(category=instance)
         serializer = ProductSerializer(products, many=True)
 
         return Response(serializer.data)
-
-
-class ProductViewSet(ModelViewSet):
-    queryset = Product.objects.filter(is_active=True)
-    serializer_class = ProductSerializer
-
-    def get_permissions(self):
-        if self.action in ["create", "update", "partial_update", "destroy"]:
-            return [IsAuthenticated(), CanManageMenu()]
-
-        return super().get_permissions()

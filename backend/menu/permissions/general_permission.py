@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from account.permissions.general import IsOwnerRole, IsManagerRole
+from account.permissions.general_permission import IsOwnerRole, IsManagerRole
 
 
 class CanManageMenu(BasePermission):

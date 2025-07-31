@@ -1,8 +1,11 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
-from account.serializers.list import UserListSerializer
-from account.permissions.list import CanListKitchenStaff, CanListManagers
+from account.serializers.user_list_serializer import UserListSerializer
+from account.permissions.user_list_permission import (
+    CanListKitchenStaff,
+    CanListManagers,
+)
 
 
 User = get_user_model()

@@ -1,32 +1,35 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+from common.models import SoftlyDeletableModel
 
 
-class Restaurant(models.Model):
+class Restaurant(SoftlyDeletableModel):
     name = models.CharField(max_length=100)
-    location = models.CharField(max_length=100, unique=True)
-    contact_number = models.CharField(max_length=15, unique=True)
+    location = models.CharField(max_length=100)
+    contact_number = models.CharField(max_length=15)
     workday_open_hour = models.TimeField(blank=True, null=True)
     workday_close_hour = models.TimeField(blank=True, null=True)
     weekend_open_hour = models.TimeField(blank=True, null=True)
     weekend_close_hour = models.TimeField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
 
-    def delete(self, **kwargs):
-        self.is_active = False
+    unique_active_fields = ["name", "location", "contact_number"]
 
-        self.save()
 
-    def clean(self, **kwargs):
+class Table(SoftlyDeletableModel):
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT)
+    number = models.PositiveSmallIntegerField()
+
+    def clean(self, *args, **kwargs):
         if (
             self.is_active
-            and Restaurant.objects.filter(name=self.name, is_active=True)
+            and Table.active_objects.filter(
+                restaurant=self.restaurant, number=self.number
+            )
             .exclude(pk=self.pk)
             .exists()
         ):
-            raise ValidationError("An active restaurant with this name already exists.")
+            raise ValidationError(
+                "An active table with this number already exists for this restaurant."
+            )
 
-
-class Table(models.Model):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-    number = models.PositiveSmallIntegerField()
+        return super().clean(*args, **kwargs)
