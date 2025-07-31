@@ -11,7 +11,7 @@ User = get_user_model()
 class Order(models.Model):
     creator_customer = models.ForeignKey(User, on_delete=models.PROTECT)
     table = models.ForeignKey(Table, on_delete=models.PROTECT)
-    created_at = models.DateTimeField(auto_now_add=True)
+    start_at = models.DateTimeField(auto_now_add=True)
     finished_at = models.DateTimeField(null=True, blank=True)
     secret = models.CharField(max_length=10, unique=True)
 
