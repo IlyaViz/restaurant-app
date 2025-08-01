@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+from django.core.validators import MinValueValidator
 from restaurant.models import Table
 from menu.models import Product
 
@@ -11,7 +13,7 @@ User = get_user_model()
 class Order(models.Model):
     creator_customer = models.ForeignKey(User, on_delete=models.PROTECT)
     table = models.ForeignKey(Table, on_delete=models.PROTECT)
-    start_at = models.DateTimeField(auto_now_add=True)
+    start_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(null=True, blank=True)
     secret = models.CharField(max_length=10, unique=True)
 
@@ -47,7 +49,9 @@ class OrderProduct(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    quantity = models.PositiveSmallIntegerField(default=1)
+    quantity = models.PositiveSmallIntegerField(
+        default=1, validators=[MinValueValidator(1)]
+    )
     status = models.CharField(choices=Status.choices, default=Status.PENDING)
 
     def delete(self, *args, **kwargs):
