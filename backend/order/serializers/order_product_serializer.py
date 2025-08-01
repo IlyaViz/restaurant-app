@@ -46,20 +46,14 @@ class OrderProductSerializer(ModelSerializer):
                 "Cannot update order product that is not draft or pending."
             )
 
-    def validate_owner_order(self, data):
-        if (
-            "order" in data
-            and data["order"].creator_customer != self.context["request"].user
-        ):
+    def validate_order_can_not_be_changed(self, changed_fields):
+        if "order" in changed_fields:
             raise serializers.ValidationError(
-                "You cannot add products to another user's order."
+                "You cannot change the order of this order product."
             )
 
     def validate(self, data):
         method = self.context["request"].method
-
-        if method in ["POST", "PUT", "PATCH"]:
-            self.validate_owner_order(data)
 
         if method in ["PUT", "PATCH"]:
             is_object_owner = self.context["request"].user == self.instance.customer
@@ -67,6 +61,7 @@ class OrderProductSerializer(ModelSerializer):
                 field for field in data if field != getattr(self.instance, field)
             ]
 
+            self.validate_order_can_not_be_changed(changed_fields)
             self.validate_owner_can_not_change_order_with_status(is_object_owner)
             self.validate_owner_can_not_change_status(
                 data, is_object_owner, changed_fields

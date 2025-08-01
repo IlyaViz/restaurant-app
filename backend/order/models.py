@@ -11,11 +11,11 @@ User = get_user_model()
 
 
 class Order(models.Model):
-    creator_customer = models.ForeignKey(User, on_delete=models.PROTECT)
+    customer = models.ForeignKey(User, on_delete=models.PROTECT)
     table = models.ForeignKey(Table, on_delete=models.PROTECT)
     start_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(null=True, blank=True)
-    secret = models.CharField(max_length=10, unique=True)
+    participants = models.ManyToManyField(User, related_name="order_participant_set")
 
     def has_active_products(self):
         return self.orderproduct_set.filter(

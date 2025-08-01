@@ -5,8 +5,8 @@ until nc -z postgres 5432; do
   sleep 1
 done
 
-python manage.py makemigrations
-python manage.py migrate
+python manage.py makemigrations --noinput
+python manage.py migrate --noinput
 
 python manage.py createsuperuser --noinput
 

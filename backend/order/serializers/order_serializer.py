@@ -7,9 +7,9 @@ class OrderSerializer(ModelSerializer):
         model = Order
         fields = [
             "id",
-            "creator_customer",
+            "customer",
             "table",
             "start_at",
             "finished_at",
-            "secret",
+            "participants",
         ]
