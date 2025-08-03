@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from restaurant.models import Restaurant
 
 
 class User(AbstractUser):
@@ -28,3 +29,8 @@ class User(AbstractUser):
     @property
     def level(self):
         return self.get_role_level(self.role)
+
+
+class KitchenStaff(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)

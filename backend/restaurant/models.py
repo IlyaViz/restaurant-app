@@ -16,7 +16,7 @@ class Restaurant(SoftlyDeletableModel):
 
 
 class Table(SoftlyDeletableModel):
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.PROTECT)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     number = models.PositiveSmallIntegerField()
 
     def clean(self, *args, **kwargs):

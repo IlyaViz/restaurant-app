@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
-from account.permissions.general_permission import IsKitchenStaffRole, IsManagerRole
-from order.permissions.general_permission import IsOrderOwner
+from account.permissions.general_permission import IsManagerRole
+from order.permissions.general_permission import IsOrderOwner, IsOrderKitchenStaff
 
 
 class CanDestroyOrder(BasePermission):
@@ -8,6 +8,6 @@ class CanDestroyOrder(BasePermission):
         # Only allow authenticated users to destroy orders
         return (
             IsOrderOwner().has_permission(request, view)
-            or IsKitchenStaffRole().has_permission(request, view)
+            or IsOrderKitchenStaff().has_permission(request, view)
             or IsManagerRole().has_permission(request, view)
         )

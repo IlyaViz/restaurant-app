@@ -10,11 +10,11 @@ class IsOwnerRole(BasePermission):
         return request.user.role == User.Role.RESTAURANT_OWNER
 
 
-class IsManagerRole(BasePermission):
-    def has_permission(self, request, view):
-        return request.user.role == User.Role.MANAGER
-
-
 class IsKitchenStaffRole(BasePermission):
     def has_permission(self, request, view):
         return request.user.role == User.Role.KITCHEN_STAFF
+
+
+class IsManagerRole(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.role == User.Role.MANAGER

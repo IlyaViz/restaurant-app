@@ -64,7 +64,7 @@ class OrderProduct(models.Model):
         PAID = "paid", "Paid"
 
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     quantity = models.PositiveSmallIntegerField(
         default=1, validators=[MinValueValidator(1)]
