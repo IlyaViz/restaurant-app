@@ -15,7 +15,9 @@ class Order(models.Model):
     table = models.ForeignKey(Table, on_delete=models.PROTECT)
     start_at = models.DateTimeField(default=timezone.now)
     finished_at = models.DateTimeField(null=True, blank=True)
-    participants = models.ManyToManyField(User, related_name="order_participant_set")
+    participants = models.ManyToManyField(
+        User, blank=True, related_name="order_participant_set"
+    )
 
     def has_active_products(self):
         return self.orderproduct_set.filter(
@@ -25,15 +27,30 @@ class Order(models.Model):
             ]
         ).exists()
 
+    def has_unpaid_products(self):
+        return self.orderproduct_set.exclude(status=OrderProduct.Status.PAID).exists()
+
     def delete(self, *args, **kwargs):
         if self.has_active_products():
             raise ValidationError("Cannot delete order with active products.")
 
         return super().delete(*args, **kwargs)
 
+    def validate_active_order_can_not_be_finished(self):
+        if self.finished_at and self.has_unpaid_products():
+            raise ValidationError("Cannot finish an order with unpaid products.")
+
+    def validate_one_active_order_per_customer(self):
+        if (
+            self.customer.order_set.filter(finished_at__isnull=True)
+            .exclude(pk=self.pk)
+            .exists()
+        ):
+            raise ValidationError("Customer already has an active order.")
+
     def clean(self, *args, **kwargs):
-        if self.finished_at and self.has_active_products():
-            raise ValidationError("Cannot finish order with active products.")
+        self.validate_active_order_can_not_be_finished()
+        self.validate_one_active_order_per_customer()
 
         return super().clean(*args, **kwargs)
 
@@ -61,3 +78,20 @@ class OrderProduct(models.Model):
             )
 
         return super().delete(*args, **kwargs)
+
+    def validate_customer_has_access_to_order(self):
+        if (
+            self.customer not in self.order.participants.all()
+            and self.customer != self.order.customer
+        ):
+            raise ValidationError("Customer does not have access to this order.")
+
+    def validate_order_is_active(self):
+        if self.order.finished_at is not None:
+            raise ValidationError("Cannot modify order product of a finished order.")
+
+    def clean(self, *args, **kwargs):
+        self.validate_order_is_active()
+        self.validate_customer_has_access_to_order()
+
+        return super().clean(*args, **kwargs)

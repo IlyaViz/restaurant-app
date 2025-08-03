@@ -1,11 +1,10 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
 from order.serializers.order_product_serializer import OrderProductSerializer
 from order.permissions.order_update_permission import CanUpdateOrderProduct
 from order.permissions.general_permission import IsOrderProductOwner
 from order.models import OrderProduct
-from account.permissions.general_permission import IsKitchenStaffRole
+from order.permissions.order_list_permission import CanListOrderProduct
 
 
 class OrderProductViewSet(ModelViewSet):
@@ -14,7 +13,7 @@ class OrderProductViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action == "list":
-            return [IsAuthenticated(), IsKitchenStaffRole()]
+            return [IsAuthenticated(), CanListOrderProduct()]
 
         if self.action in ["update", "partial_update"]:
             return [IsAuthenticated(), CanUpdateOrderProduct()]
@@ -25,14 +24,4 @@ class OrderProductViewSet(ModelViewSet):
         return [IsAuthenticated(), IsOrderProductOwner()]
 
     def perform_create(self, serializer):
-        order = serializer.validated_data["order"]
-
-        if (
-            self.request.user not in order.participants.all()
-            or self.request.user != order.customer
-        ):
-            raise PermissionDenied(
-                "You are not allowed to create order products for this order."
-            )
-
         serializer.save(customer=self.request.user, status=OrderProduct.Status.DRAFT)
