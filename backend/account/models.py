@@ -17,6 +17,8 @@ class User(AbstractUser):
         Role.RESTAURANT_OWNER,
     ]
 
+    email = models.EmailField(unique=True, blank=False, null=False)
+
     role = models.CharField(
         choices=Role.choices,
         default=Role.CUSTOMER,
