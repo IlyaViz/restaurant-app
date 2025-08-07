@@ -69,6 +69,7 @@ export const register = createAsyncThunk(
 
 const initialState = {
   username: null,
+  role: null,
   token: null,
   login: {
     loading: false,
@@ -87,6 +88,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.username = null;
       state.token = null;
+      state.role = null;
     },
     clearErrors: (state) => {
       state.login.error = null;
@@ -102,6 +104,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.username = action.meta.arg.username;
         state.token = action.payload.token;
+        state.role = action.payload.role;
         state.login.loading = false;
       })
       .addCase(login.rejected, (state, action) => {
