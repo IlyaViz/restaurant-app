@@ -11,13 +11,8 @@ class OrderProductSerializer(ModelSerializer):
             "customer": {"read_only": True},
         }
 
-    NON_ACTIVE_STATUSES = [
-        OrderProduct.Status.DRAFT,
-        OrderProduct.Status.PENDING,
-    ]
-
     def is_active_status(self):
-        return self.instance.status not in self.NON_ACTIVE_STATUSES
+        return self.instance.status not in OrderProduct.INACTIVE_STATUSES
 
     def validate_owner_can_not_change_status(
         self, data, is_object_owner, changed_fields
@@ -26,7 +21,7 @@ class OrderProductSerializer(ModelSerializer):
             is_object_owner
             and "status" in changed_fields
             and not self.is_active_status()
-            and data["status"] not in self.NON_ACTIVE_STATUSES
+            and data["status"] not in OrderProduct.INACTIVE_STATUSES
         ):
             raise serializers.ValidationError(
                 "You cannot change the status of this order product."

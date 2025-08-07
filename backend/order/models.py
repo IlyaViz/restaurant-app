@@ -64,6 +64,11 @@ class OrderProduct(ProjectBaseModel):
         COMPLETED = "completed", "Completed"
         PAID = "paid", "Paid"
 
+    INACTIVE_STATUSES = [
+        Status.DRAFT,
+        Status.PENDING,
+    ]
+
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     customer = models.ForeignKey(User, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
