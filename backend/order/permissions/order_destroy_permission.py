@@ -4,10 +4,9 @@ from order.permissions.general_permission import IsOrderOwner, IsOrderKitchenSta
 
 
 class CanDestroyOrder(BasePermission):
-    def has_permission(self, request, view):
-        # Only allow authenticated users to destroy orders
+    def has_object_permission(self, request, view, obj):
         return (
-            IsOrderOwner().has_permission(request, view)
-            or IsOrderKitchenStaff().has_permission(request, view)
-            or IsManagerRole().has_permission(request, view)
+            IsOrderOwner().has_object_permission(request, view, obj)
+            or IsOrderKitchenStaff().has_object_permission(request, view, obj)
+            or IsManagerRole().has_permission(request, view, obj)
         )

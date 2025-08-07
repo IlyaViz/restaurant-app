@@ -18,9 +18,9 @@ class CanUpdateOrderProduct(BasePermission):
 
 
 class CanUpdateOrder(BasePermission):
-    def has_permission(self, request, view):
+    def has_object_permission(self, request, view, obj):
         return (
-            IsOrderOwner().has_permission(request, view)
-            or IsOrderKitchenStaff().has_permission(request, view)
+            IsOrderOwner().has_object_permission(request, view, obj)
+            or IsOrderKitchenStaff().has_object_permission(request, view, obj)
             or IsManagerRole().has_permission(request, view)
         )
