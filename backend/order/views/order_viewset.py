@@ -20,7 +20,7 @@ class OrderViewSet(ModelViewSet):
     serializer_class = OrderSerializer
 
     def get_permissions(self):
-        if self.action == "list":
+        if self.action in ["list", "active_orders"]:
             return [IsAuthenticated(), CanListOrder()]
 
         if self.action == "destroy":
@@ -58,6 +58,14 @@ class OrderViewSet(ModelViewSet):
             return Response({"detail": "No active order found."}, status=404)
 
         serializer = self.get_serializer(active_order)
+
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"], url_path="active-orders")
+    def active_orders(self, request):
+        active_orders = self.queryset.filter(finished_at__isnull=True)
+
+        serializer = self.get_serializer(active_orders, many=True)
 
         return Response(serializer.data)
 
