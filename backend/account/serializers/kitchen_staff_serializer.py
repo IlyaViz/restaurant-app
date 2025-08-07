@@ -1,10 +1,8 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from account.models import KitchenStaff
 
 
-class KitchenStaffSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="user.username")
-
+class KitchenStaffExtraSerializer(ModelSerializer):
     class Meta:
         model = KitchenStaff
-        fields = ["id", "restaurant", "username"]
+        fields = ["restaurant"]

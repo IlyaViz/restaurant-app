@@ -5,12 +5,13 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator
 from restaurant.models import Table
 from menu.models import Product
+from common.models import ProjectBaseModel
 
 
 User = get_user_model()
 
 
-class Order(models.Model):
+class Order(ProjectBaseModel):
     customer = models.ForeignKey(User, on_delete=models.PROTECT)
     table = models.ForeignKey(Table, on_delete=models.PROTECT)
     start_at = models.DateTimeField(default=timezone.now)
@@ -55,7 +56,7 @@ class Order(models.Model):
         return super().clean(*args, **kwargs)
 
 
-class OrderProduct(models.Model):
+class OrderProduct(ProjectBaseModel):
     class Status(models.TextChoices):
         DRAFT = "draft", "Draft"
         PENDING = "pending", "Pending"

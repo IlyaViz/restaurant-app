@@ -2,17 +2,13 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from account.serializers.user_serializer import UserSerializer
-from account.permissions.kitchen_staff_permission import (
-    CanManageKitchenStaff,
-    CanListKitchenStaff,
-)
-
+from account.permissions.manager_permission import CanManageManager, CanListManager
 
 User = get_user_model()
 
 
-class KitchenStaffViewSet(ModelViewSet):
-    queryset = User.objects.filter(role=User.Role.KITCHEN_STAFF)
+class ManagerViewSet(ModelViewSet):
+    queryset = User.objects.filter(role=User.Role.MANAGER)
     serializer_class = UserSerializer
 
     def get_permissions(self):
@@ -22,9 +18,9 @@ class KitchenStaffViewSet(ModelViewSet):
             "partial_update",
             "destroy",
         ]:
-            return [IsAuthenticated(), CanManageKitchenStaff()]
+            return [IsAuthenticated(), CanManageManager()]
 
         if self.action == "list":
-            return [IsAuthenticated(), CanListKitchenStaff()]
+            return [IsAuthenticated(), CanListManager()]
 
         return super().get_permissions()

@@ -1,8 +1,8 @@
 from django.db import models
-from common.models import SoftlyDeletableModel
+from common.models import SoftlyDeletableModel, ProjectBaseModel
 
 
-class Category(models.Model):
+class Category(ProjectBaseModel):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
 

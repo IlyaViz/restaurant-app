@@ -3,12 +3,17 @@ from django.core.exceptions import ValidationError
 from django.db.models import Manager
 
 
+class ProjectBaseModel(models.Model):
+    class Meta:
+        abstract = True
+
+
 class ActiveManager(Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
 
 
-class SoftlyDeletableModel(models.Model):
+class SoftlyDeletableModel(ProjectBaseModel):
     is_active = models.BooleanField(default=True)
 
     objects = models.Manager()

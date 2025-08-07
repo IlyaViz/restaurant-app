@@ -18,3 +18,9 @@ class IsKitchenStaffRole(BasePermission):
 class IsManagerRole(BasePermission):
     def has_permission(self, request, view):
         return request.user.role == User.Role.MANAGER
+
+
+class IsAccountOwner(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return request.user == obj
+
