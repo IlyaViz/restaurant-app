@@ -5,7 +5,7 @@ import { login } from "./authSlice.js";
 import AuthForm from "./AuthForm";
 
 const LoginForm = () => {
-  const { loginError } = useSelector((state) => state.auth);
+  const loginError = useSelector((state) => state.auth.login.error);
 
   const dispatch = useDispatch();
 

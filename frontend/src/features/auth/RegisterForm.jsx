@@ -5,7 +5,7 @@ import { register } from "./authSlice.js";
 import AuthForm from "./AuthForm";
 
 const RegisterForm = () => {
-  const { registerError } = useSelector((state) => state.auth);
+  const registerError = useSelector((state) => state.auth.register.error);
 
   const dispatch = useDispatch();
 
