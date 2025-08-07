@@ -1,6 +1,10 @@
 from rest_framework.permissions import BasePermission
 from account.permissions.general_permission import IsManagerRole
-from order.permissions.general_permission import IsKitchenStaffRole
+from order.permissions.general_permission import (
+    IsKitchenStaffRole,
+    IsOrderKitchenStaff,
+    IsOrderOwner,
+)
 
 
 class CanListOrder(BasePermission):
@@ -8,6 +12,15 @@ class CanListOrder(BasePermission):
         return IsKitchenStaffRole().has_permission(
             request, view
         ) or IsManagerRole().has_permission(request, view)
+
+
+class CanListConcreteOrderOrderProducts(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return (
+            IsOrderOwner().has_object_permission(request, view, obj)
+            or IsOrderKitchenStaff().has_object_permission(request, view, obj)
+            or IsManagerRole().has_permission(request, view)
+        )
 
 
 class CanListOrderProduct(BasePermission):
