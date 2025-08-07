@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from django.utils import timezone
+from django.contrib.auth import get_user_model
+from account.models import KitchenStaff
 from order.serializers.order_serializer import OrderSerializer
 from order.serializers.order_product_serializer import OrderProductSerializer
 from order.models import Order
@@ -15,9 +17,23 @@ from order.permissions.general_permission import IsOrderOwner
 from order.permissions.order_update_permission import CanUpdateOrder
 
 
+User = get_user_model()
+
+
 class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        if self.request.user.role == User.Role.KITCHEN_STAFF:
+            kitchen_staff = KitchenStaff.objects.filter(user=self.request.user).first()
+
+            if not kitchen_staff:
+                return Order.objects.none()
+
+            return Order.objects.filter(table__restaurant=kitchen_staff.restaurant)
+
+        return Order.objects.all()
 
     def get_permissions(self):
         if self.action in ["list", "active_orders"]:
@@ -50,9 +66,11 @@ class OrderViewSet(ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="active-order")
     def active_order(self, request):
-        active_order = self.queryset.filter(
-            customer=request.user, finished_at__isnull=True
-        ).first()
+        active_order = (
+            self.get_queryset()
+            .filter(customer=request.user, finished_at__isnull=True)
+            .first()
+        )
 
         if not active_order:
             return Response({"detail": "No active order found."}, status=404)
@@ -63,7 +81,7 @@ class OrderViewSet(ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="active-orders")
     def active_orders(self, request):
-        active_orders = self.queryset.filter(finished_at__isnull=True)
+        active_orders = self.get_queryset().filter(finished_at__isnull=True)
 
         serializer = self.get_serializer(active_orders, many=True)
 

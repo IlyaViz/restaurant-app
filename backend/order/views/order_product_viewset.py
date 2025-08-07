@@ -1,5 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import get_user_model
+from account.models import KitchenStaff
 from order.serializers.order_product_serializer import OrderProductSerializer
 from order.permissions.order_update_permission import CanUpdateOrderProduct
 from order.permissions.general_permission import IsOrderProductOwner
@@ -7,9 +9,25 @@ from order.models import OrderProduct
 from order.permissions.order_list_permission import CanListOrderProduct
 
 
+User = get_user_model()
+
+
 class OrderProductViewSet(ModelViewSet):
-    serializer_class = OrderProductSerializer
     queryset = OrderProduct.objects.all()
+    serializer_class = OrderProductSerializer
+
+    def get_queryset(self):
+        if self.request.user.role == User.Role.KITCHEN_STAFF:
+            kitchen_staff = KitchenStaff.objects.filter(user=self.request.user).first()
+
+            if not kitchen_staff:
+                return OrderProduct.objects.none()
+
+            return OrderProduct.objects.filter(
+                order__table__restaurant=kitchen_staff.restaurant
+            )
+
+        return OrderProduct.objects.all()
 
     def get_permissions(self):
         if self.action == "list":
