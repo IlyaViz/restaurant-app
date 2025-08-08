@@ -1,6 +1,11 @@
-const Button = ({ type, label, onClick, className }) => {
+const Button = ({ active = true, type, label, onClick, className }) => {
   return (
-    <button type={type} onClick={onClick} className={`${className}`}>
+    <button
+      disabled={!active}
+      type={type}
+      onClick={onClick}
+      className={`${className} ${!active && "opacity-50"} cursor-pointer`}
+    >
       {label}
     </button>
   );

@@ -4,7 +4,7 @@ import { logout } from "../features/auth/authSlice";
 import Button from "./Button";
 
 const Header = () => {
-  const { username, token } = useSelector((state) => state.auth);
+  const { username, token, role } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
@@ -32,6 +32,12 @@ const Header = () => {
         ) : (
           <NavLink to="/register">
             <Button label="Register" className="btn-primary" />
+          </NavLink>
+        )}
+
+        {role && role !== "customer" && (
+          <NavLink to="/staff-page">
+            <Button label="Job Management" className="btn-primary" />
           </NavLink>
         )}
       </nav>

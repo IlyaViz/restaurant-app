@@ -4,7 +4,7 @@ import { clearErrors } from "./authSlice.js";
 import Input from "../../components/Input.jsx";
 import Button from "../../components/Button.jsx";
 
-const AuthForm = ({ fields, onSubmit, submitLabel, error }) => {
+const AuthForm = ({ fields, onSubmit, submitLabel, loading, error }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -51,6 +51,8 @@ const AuthForm = ({ fields, onSubmit, submitLabel, error }) => {
 
         <Button type="submit" label={submitLabel} className="btn-primary" />
       </div>
+
+      {loading && <div>Processing....</div>}
 
       {error && (
         <div className="text-red-500 mt-2">

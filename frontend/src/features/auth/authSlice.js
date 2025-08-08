@@ -4,7 +4,6 @@ import { HEADERS } from "../../constants/fetch.js";
 
 export const login = createAsyncThunk(
   "auth/login",
-
   async ({ username, password }, { rejectWithValue }) => {
     try {
       const response = await fetch(
@@ -71,11 +70,11 @@ const initialState = {
   username: null,
   role: null,
   token: null,
-  login: {
+  loginStatus: {
     loading: false,
     error: null,
   },
-  register: {
+  registerStatus: {
     loading: false,
     error: null,
   },
@@ -91,37 +90,37 @@ const authSlice = createSlice({
       state.role = null;
     },
     clearErrors: (state) => {
-      state.login.error = null;
-      state.register.error = null;
+      state.loginStatus.error = null;
+      state.registerStatus.error = null;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
-        state.login.loading = true;
-        state.login.error = null;
+        state.loginStatus.loading = true;
+        state.loginStatus.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
         state.username = action.meta.arg.username;
         state.token = action.payload.token;
         state.role = action.payload.role;
-        state.login.loading = false;
+        state.loginStatus.loading = false;
       })
       .addCase(login.rejected, (state, action) => {
-        state.login.loading = false;
-        state.login.error = action.payload;
+        state.loginStatus.loading = false;
+        state.loginStatus.error = action.payload;
       })
 
       .addCase(register.pending, (state) => {
-        state.register.loading = true;
-        state.register.error = null;
+        state.registerStatus.loading = true;
+        state.registerStatus.error = null;
       })
       .addCase(register.fulfilled, (state, action) => {
-        state.register.loading = false;
+        state.registerStatus.loading = false;
       })
       .addCase(register.rejected, (state, action) => {
-        state.register.loading = false;
-        state.register.error = action.payload;
+        state.registerStatus.loading = false;
+        state.registerStatus.error = action.payload;
       });
   },
 });

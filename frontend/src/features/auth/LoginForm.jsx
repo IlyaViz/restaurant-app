@@ -5,7 +5,7 @@ import { login } from "./authSlice.js";
 import AuthForm from "./AuthForm";
 
 const LoginForm = () => {
-  const loginError = useSelector((state) => state.auth.login.error);
+  const loginStatus = useSelector((state) => state.auth.loginStatus);
 
   const dispatch = useDispatch();
 
@@ -16,10 +16,10 @@ const LoginForm = () => {
     { name: "password", label: "Password", type: "password", required: true },
   ];
 
-  const onFormSubmit = async (event) => {
-    event.preventDefault();
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
 
-    const formData = new FormData(event.target);
+    const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
     try {
@@ -36,7 +36,8 @@ const LoginForm = () => {
       fields={fields}
       onSubmit={onFormSubmit}
       submitLabel="Login"
-      error={loginError}
+      loading={loginStatus.loading}
+      error={loginStatus.error}
     />
   );
 };

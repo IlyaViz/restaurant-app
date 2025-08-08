@@ -5,7 +5,7 @@ import { register } from "./authSlice.js";
 import AuthForm from "./AuthForm";
 
 const RegisterForm = () => {
-  const registerError = useSelector((state) => state.auth.register.error);
+  const registerStatus = useSelector((state) => state.auth.registerStatus);
 
   const dispatch = useDispatch();
 
@@ -17,10 +17,10 @@ const RegisterForm = () => {
     { name: "password", label: "Password", type: "password", required: true },
   ];
 
-  const onFormSubmit = async (event) => {
-    event.preventDefault();
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
 
-    const formData = new FormData(event.target);
+    const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
 
     try {
@@ -37,7 +37,8 @@ const RegisterForm = () => {
       fields={fields}
       onSubmit={onFormSubmit}
       submitLabel="Register"
-      error={registerError}
+      loading={registerStatus.loading}
+      error={registerStatus.error}
     />
   );
 };
