@@ -28,7 +28,7 @@ const RegisterForm = () => {
 
       navigate("/login");
     } catch (error) {
-      console.error("Registration failed (no navigate applied):", error);
+      console.error("Registration failed (no navigate applied)");
     }
   };
 

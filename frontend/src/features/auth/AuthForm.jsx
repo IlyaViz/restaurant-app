@@ -49,10 +49,13 @@ const AuthForm = ({ fields, onSubmit, submitLabel, loading, error }) => {
           />
         ))}
 
-        <Button type="submit" label={submitLabel} className="btn-primary" />
+        <Button
+          type="submit"
+          label={submitLabel}
+          className="btn-primary"
+          loading={loading}
+        />
       </div>
-
-      {loading && <div>Processing....</div>}
 
       {error && (
         <div className="text-red-500 mt-2">

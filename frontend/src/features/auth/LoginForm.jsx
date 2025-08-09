@@ -27,7 +27,7 @@ const LoginForm = () => {
 
       navigate("/");
     } catch (error) {
-      console.error("Login failed (no navigate applied):", error);
+      console.error("Login failed (no navigate applied)");
     }
   };
 

@@ -20,8 +20,13 @@ const CustomerOrder = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [selectedTable, setSelectedTable] = useState(null);
 
-  const { customerOrder, createOrderStatus, customerOrderProducts } =
-    useSelector((state) => state.order);
+  const {
+    customerOrder,
+    createOrderStatus,
+    customerOrderProducts,
+    deleteOrderStatus,
+    removeOrderProductStatus,
+  } = useSelector((state) => state.order);
   const { restaurants, restaurantTables } = useSelector(
     (state) => state.restaurant
   );
@@ -72,6 +77,10 @@ const CustomerOrder = () => {
     );
   };
 
+  const isOrderProductRemovable = (orderProduct) => {
+    return Object.keys(INACTIVE_ORDER_STATUSES).includes(orderProduct.status);
+  };
+
   const render = () => {
     if (!token) {
       return (
@@ -94,6 +103,7 @@ const CustomerOrder = () => {
               onClick={() => dispatch(deleteOrder(customerOrder.id))}
               className="btn-danger"
               active={isOrderDeletable()}
+              loading={deleteOrderStatus.loading}
             />
           </div>
 
@@ -135,9 +145,8 @@ const CustomerOrder = () => {
                   label="Remove"
                   onClick={() => dispatch(removeOrderProduct(orderProduct.id))}
                   className="btn-danger"
-                  active={Object.keys(INACTIVE_ORDER_STATUSES).includes(
-                    orderProduct.status
-                  )}
+                  active={isOrderProductRemovable(orderProduct)}
+                  loading={removeOrderProductStatus.loading}
                 />
               </div>
             ))}
@@ -180,9 +189,8 @@ const CustomerOrder = () => {
             label="Create Order"
             onClick={() => dispatch(createOrder(selectedTable))}
             className="btn-primary"
+            loading={createOrderStatus.loading}
           />
-
-          {createOrderStatus.loading && <div>Creating order...</div>}
 
           {createOrderStatus.error && (
             <div>Error creating order: {createOrderStatus.error}</div>
