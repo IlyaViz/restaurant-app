@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchActiveOrder } from "./orderSlice";
 import {
   createOrder,
   fetchOrderProducts,
   removeOrderProduct,
   deleteOrder,
   updateOrderProductStatus,
-} from "./orderSlice";
+  fetchActiveOrder,
+} from "./orderThunk";
 import {
   fetchRestaurants,
   fetchRestaurantTables,
-} from "../restaurant/restaurantSlice";
+} from "../restaurant/restaurantThunk";
 import { showToast } from "../toast/toastSlice";
 import { ORDER_STATUSES, INACTIVE_ORDER_STATUSES } from "../../constants/order";
 import { FETCH_ORDER_PRODUCTS_INTERVAL } from "../../constants/time";
@@ -35,6 +35,12 @@ const CustomerOrder = () => {
   const token = useSelector((state) => state.auth.token);
 
   const dispatch = useDispatch();
+
+  const errors = [
+    createOrderStatus.error,
+    removeOrderProductStatus.error,
+    deleteOrderStatus.error,
+  ];
 
   useEffect(() => {
     if (token) dispatch(fetchActiveOrder());
@@ -67,24 +73,12 @@ const CustomerOrder = () => {
   }, [selectedRestaurant, dispatch]);
 
   useEffect(() => {
-    if (createOrderStatus.error) {
-      dispatch(showToast({ message: createOrderStatus.error, type: "error" }));
-    }
-  }, [createOrderStatus, dispatch]);
-
-  useEffect(() => {
-    if (removeOrderProductStatus.error) {
-      dispatch(
-        showToast({ message: removeOrderProductStatus.error, type: "error" })
-      );
-    }
-  }, [removeOrderProductStatus, dispatch]);
-
-  useEffect(() => {
-    if (deleteOrderStatus.error) {
-      dispatch(showToast({ message: deleteOrderStatus.error, type: "error" }));
-    }
-  }, [deleteOrderStatus, dispatch]);
+    errors.forEach((error) => {
+      if (error) {
+        dispatch(showToast({ message: error, type: "error" }));
+      }
+    });
+  }, [errors, dispatch]);
 
   const handleRestaurantChange = (e) => {
     setSelectedRestaurant(e.target.value);

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login } from "./authSlice";
+import { login } from "./authThunk";
 import AuthForm from "./AuthForm";
 
 const LoginForm = () => {

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMenuItems } from "./menuSlice";
-import { addOrderProduct } from "../order/orderSlice";
+import { fetchMenuItems } from "./menuThunk";
+import { addOrderProduct } from "../order/orderThunk";
 import { showToast } from "../toast/toastSlice";
 import Product from "./Product";
 import Button from "../../components/Button";
