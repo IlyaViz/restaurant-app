@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMenuItems } from "./menuSlice";
+import { addOrderProduct } from "../order/orderSlice";
 import Product from "./Product";
 import Button from "../../components/Button";
 
-const MenuList = ({ onItemClick }) => {
+const MenuList = () => {
   const { customerOrder } = useSelector((state) => state.order);
   const { menuItems, fetchMenuItemsStatus } = useSelector(
     (state) => state.menu
@@ -16,6 +17,15 @@ const MenuList = ({ onItemClick }) => {
     dispatch(fetchMenuItems());
   }, [dispatch]);
 
+  const handleAddOrderProduct = (item) => {
+    const orderProduct = {
+      orderId: customerOrder.id,
+      productId: item.id,
+    };
+
+    dispatch(addOrderProduct(orderProduct));
+  };
+
   return (
     <div className="flex flex-col items-center gap-8">
       {fetchMenuItemsStatus.loading && <div>Loading menu items...</div>}
@@ -26,13 +36,13 @@ const MenuList = ({ onItemClick }) => {
 
       {menuItems.map((item) => (
         <div key={item.id} className="flex flex-col gap-1">
-          <Product {...item} />
+          <Product {...item} imageClassName="w-64" />
 
           {customerOrder && (
             <Button
               label="Add to Order"
               className="btn-primary"
-              onClick={() => onItemClick(item)}
+              onClick={() => handleAddOrderProduct(item)}
             />
           )}
         </div>

@@ -88,6 +88,110 @@ export const createOrder = createAsyncThunk(
   }
 );
 
+export const deleteOrder = createAsyncThunk(
+  "order/deleteOrder",
+  async (orderId, { rejectWithValue, getState }) => {
+    try {
+      const response = await fetch(
+        `${BACKEND_API_URL}/order-management/order/${orderId}/`,
+        {
+          method: "DELETE",
+          headers: getAuthHeaders(getState),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+
+        return rejectWithValue(error);
+      }
+
+      return orderId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchOrderProducts = createAsyncThunk(
+  "order/fetchOrderProducts",
+  async (orderId, { rejectWithValue, getState }) => {
+    try {
+      const response = await fetch(
+        `${BACKEND_API_URL}/order-management/order/${orderId}/order-products/`,
+        {
+          headers: getAuthHeaders(getState),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+
+        return rejectWithValue(error);
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const removeOrderProduct = createAsyncThunk(
+  "order/removeOrderProduct",
+  async (orderProductId, { rejectWithValue, getState }) => {
+    try {
+      const response = await fetch(
+        `${BACKEND_API_URL}/order-management/order-product/${orderProductId}/`,
+        {
+          method: "DELETE",
+          headers: getAuthHeaders(getState),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+
+        return rejectWithValue(error);
+      }
+
+      return orderProductId;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const updateOrderProductStatus = createAsyncThunk(
+  "order/updateOrderProductStatus",
+  async ({ orderProductId, status }, { rejectWithValue, getState }) => {
+    try {
+      const response = await fetch(
+        `${BACKEND_API_URL}/order-management/order-product/${orderProductId}/`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ status }),
+          headers: getAuthHeaders(getState),
+        }
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+
+        return rejectWithValue(error);
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const initialState = {
   customerOrder: null,
   customerOrderProducts: [],
@@ -102,6 +206,22 @@ const initialState = {
     error: null,
   },
   createOrderStatus: {
+    loading: false,
+    error: null,
+  },
+  fetchOrderProductsStatus: {
+    loading: false,
+    error: null,
+  },
+  removeOrderProductStatus: {
+    loading: false,
+    error: null,
+  },
+  deleteOrderStatus: {
+    loading: false,
+    error: null,
+  },
+  updateOrderProductStatus: {
     loading: false,
     error: null,
   },
@@ -149,6 +269,67 @@ const orderSlice = createSlice({
       .addCase(createOrder.rejected, (state, action) => {
         state.createOrderStatus.loading = false;
         state.createOrderStatus.error = action.payload;
+      })
+
+      .addCase(fetchOrderProducts.pending, (state) => {
+        state.fetchOrderProductsStatus.loading = true;
+        state.fetchOrderProductsStatus.error = null;
+      })
+      .addCase(fetchOrderProducts.fulfilled, (state, action) => {
+        state.customerOrderProducts = action.payload;
+        state.fetchOrderProductsStatus.loading = false;
+      })
+      .addCase(fetchOrderProducts.rejected, (state, action) => {
+        state.fetchOrderProductsStatus.loading = false;
+        state.fetchOrderProductsStatus.error = action.payload;
+      })
+
+      .addCase(removeOrderProduct.pending, (state) => {
+        state.removeOrderProductStatus.loading = true;
+        state.removeOrderProductStatus.error = null;
+      })
+      .addCase(removeOrderProduct.fulfilled, (state, action) => {
+        state.customerOrderProducts = state.customerOrderProducts.filter(
+          (product) => product.id !== action.payload
+        );
+        state.removeOrderProductStatus.loading = false;
+      })
+      .addCase(removeOrderProduct.rejected, (state, action) => {
+        state.removeOrderProductStatus.loading = false;
+        state.removeOrderProductStatus.error = action.payload;
+      })
+
+      .addCase(deleteOrder.pending, (state) => {
+        state.deleteOrderStatus.loading = true;
+        state.deleteOrderStatus.error = null;
+      })
+      .addCase(deleteOrder.fulfilled, (state, action) => {
+        state.customerOrder = null;
+        state.deleteOrderStatus.loading = false;
+      })
+      .addCase(deleteOrder.rejected, (state, action) => {
+        state.deleteOrderStatus.loading = false;
+        state.deleteOrderStatus.error = action.payload;
+      })
+
+      .addCase(updateOrderProductStatus.pending, (state) => {
+        state.updateOrderProductStatus.loading = true;
+        state.updateOrderProductStatus.error = null;
+      })
+      .addCase(updateOrderProductStatus.fulfilled, (state, action) => {
+        const { id, status } = action.payload;
+
+        const orderProduct = state.customerOrderProducts.find(
+          (orderProduct) => orderProduct.id === id
+        );
+
+        orderProduct.status = status;
+
+        state.updateOrderProductStatus.loading = false;
+      })
+      .addCase(updateOrderProductStatus.rejected, (state, action) => {
+        state.updateOrderProductStatus.loading = false;
+        state.updateOrderProductStatus.error = action.payload;
       });
   },
 });

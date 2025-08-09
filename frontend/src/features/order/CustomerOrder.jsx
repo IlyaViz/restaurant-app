@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchActiveOrder } from "./orderSlice";
-import { createOrder } from "./orderSlice";
+import {
+  createOrder,
+  fetchOrderProducts,
+  removeOrderProduct,
+  deleteOrder,
+  updateOrderProductStatus,
+} from "./orderSlice";
 import {
   fetchRestaurants,
   fetchRestaurantTables,
 } from "../restaurant/restaurantSlice";
+import { ORDER_STATUSES, INACTIVE_ORDER_STATUSES } from "../../constants/order";
 import Button from "../../components/Button";
+import Product from "../menu/Product";
 
 const CustomerOrder = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [selectedTable, setSelectedTable] = useState(null);
 
-  const { customerOrder, createOrderStatus } = useSelector(
-    (state) => state.order
-  );
+  const { customerOrder, createOrderStatus, customerOrderProducts } =
+    useSelector((state) => state.order);
   const { restaurants, restaurantTables } = useSelector(
     (state) => state.restaurant
   );
@@ -25,6 +32,20 @@ const CustomerOrder = () => {
   useEffect(() => {
     if (token) dispatch(fetchActiveOrder());
   }, [token, dispatch]);
+
+  useEffect(() => {
+    if (customerOrder) {
+      dispatch(fetchOrderProducts(customerOrder.id));
+    }
+
+    const interval = setInterval(() => {
+      if (customerOrder) {
+        dispatch(fetchOrderProducts(customerOrder.id));
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [customerOrder, dispatch]);
 
   useEffect(() => {
     if (token && !customerOrder) {
@@ -44,6 +65,13 @@ const CustomerOrder = () => {
     setSelectedTable(null);
   };
 
+  const isOrderDeletable = () => {
+    return !customerOrderProducts.some(
+      (orderProduct) =>
+        !Object.keys(INACTIVE_ORDER_STATUSES).includes(orderProduct.status)
+    );
+  };
+
   const render = () => {
     if (!token) {
       return (
@@ -55,9 +83,65 @@ const CustomerOrder = () => {
 
     if (customerOrder) {
       return (
-        <div className="flex flex-col items-center">
-          <h2 className="text-2xl font-bold">Active Order</h2>
-          <p className="text-lg">Table: {customerOrder.table}</p>
+        <div className="bg-blue-100 p-4 rounded-2xl">
+          <div className="flex flex-col items-center">
+            <h2 className="text-2xl font-bold">Active Order</h2>
+
+            <p className="text-lg">Table: {customerOrder.table}</p>
+
+            <Button
+              label="Delete Order"
+              onClick={() => dispatch(deleteOrder(customerOrder.id))}
+              className="btn-danger"
+              active={isOrderDeletable()}
+            />
+          </div>
+
+          <div className="grid gap-8 mt-8 grid-cols-6">
+            {customerOrderProducts.map((orderProduct) => (
+              <div key={orderProduct.id} className="flex flex-col gap-2">
+                <Product {...orderProduct.product} imageClassName="w-32" />
+
+                <select
+                  className="text-center"
+                  onChange={(e) =>
+                    dispatch(
+                      updateOrderProductStatus({
+                        orderProductId: orderProduct.id,
+                        status: e.target.value,
+                      })
+                    )
+                  }
+                >
+                  {!Object.keys(INACTIVE_ORDER_STATUSES).includes(
+                    orderProduct.status
+                  ) && (
+                    <option value="">
+                      {ORDER_STATUSES[orderProduct.status]}
+                    </option>
+                  )}
+
+                  {Object.keys(INACTIVE_ORDER_STATUSES).includes(
+                    orderProduct.status
+                  ) &&
+                    Object.keys(INACTIVE_ORDER_STATUSES).map((status) => (
+                      <option key={status} value={status}>
+                        {INACTIVE_ORDER_STATUSES[status]}
+                      </option>
+                    ))}
+                </select>
+
+                <Button
+                  label="Remove"
+                  onClick={() => dispatch(removeOrderProduct(orderProduct.id))}
+                  className="btn-danger"
+                  active={Object.keys(INACTIVE_ORDER_STATUSES).includes(
+                    orderProduct.status
+                  )}
+                />
+              </div>
+            ))}
+          </div>
         </div>
       );
     }

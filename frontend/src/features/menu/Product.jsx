@@ -1,8 +1,8 @@
-const Product = ({ name, price, image }) => {
+const Product = ({ name, price, image, imageClassName }) => {
   return (
     <div className="flex flex-col items-center bg-blue-50 border rounded-2xl">
       <p>${price}</p>
-      <img src={image} alt={name} className="w-64" />
+      <img src={image} alt={name} className={`${imageClassName}`} />
       <h3>{name}</h3>
     </div>
   );

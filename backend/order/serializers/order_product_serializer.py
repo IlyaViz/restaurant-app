@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from order.models import OrderProduct
+from menu.serializers.product_serializer import ProductSerializer
 
 
 class OrderProductSerializer(ModelSerializer):
@@ -10,6 +11,15 @@ class OrderProductSerializer(ModelSerializer):
         extra_kwargs = {
             "customer": {"read_only": True},
         }
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+
+        representation["product"] = ProductSerializer(
+            instance.product, context=self.context
+        ).data
+
+        return representation
 
     def is_active_status(self):
         return self.instance.status not in OrderProduct.INACTIVE_STATUSES

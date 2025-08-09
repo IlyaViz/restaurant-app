@@ -91,8 +91,10 @@ class OrderViewSet(ModelViewSet):
     def order_products(self, request, pk=None):
         order = self.get_object()
 
-        products = order.orderproduct_set.all()
+        order_products = order.orderproduct_set.all()
 
-        serializer = OrderProductSerializer(products, many=True)
+        serializer = OrderProductSerializer(
+            order_products, many=True, context=self.get_serializer_context()
+        )
 
         return Response(serializer.data)
