@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { BACKEND_API_URL } from "../../constants/settings.js";
-import { HEADERS } from "../../constants/fetch.js";
+import { BACKEND_API_URL } from "../../constants/settings";
+import { HEADERS } from "../../constants/fetch";
 
 export const login = createAsyncThunk(
   "auth/login",

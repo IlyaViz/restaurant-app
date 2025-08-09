@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { clearErrors } from "./authSlice.js";
-import Input from "../../components/Input.jsx";
-import Button from "../../components/Button.jsx";
+import { clearErrors } from "./authSlice";
+import { showToast } from "../toast/toastSlice";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
 
 const AuthForm = ({ fields, onSubmit, submitLabel, loading, error }) => {
   const dispatch = useDispatch();
@@ -13,25 +14,11 @@ const AuthForm = ({ fields, onSubmit, submitLabel, loading, error }) => {
     };
   }, [dispatch]);
 
-  const handleAuthError = (error) => {
-    if ("non_field_errors" in error) {
-      return <div>{error.non_field_errors}</div>;
+  useEffect(() => {
+    if (error) {
+      dispatch(showToast({ message: error, type: "error" }));
     }
-
-    if (fields.some((field) => field.name in error)) {
-      return (
-        <div>
-          {fields.map((field) => {
-            if (field.name in error) {
-              return <div key={field.name}>{error[field.name]}</div>;
-            }
-          })}
-        </div>
-      );
-    }
-
-    return <div>{error}</div>;
-  };
+  }, [error, dispatch]);
 
   return (
     <form
@@ -56,12 +43,6 @@ const AuthForm = ({ fields, onSubmit, submitLabel, loading, error }) => {
           loading={loading}
         />
       </div>
-
-      {error && (
-        <div className="text-red-500 mt-2">
-          {handleAuthError(error, fields)}
-        </div>
-      )}
     </form>
   );
 };

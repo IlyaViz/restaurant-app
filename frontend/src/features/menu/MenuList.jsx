@@ -2,11 +2,14 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMenuItems } from "./menuSlice";
 import { addOrderProduct } from "../order/orderSlice";
+import { showToast } from "../toast/toastSlice";
 import Product from "./Product";
 import Button from "../../components/Button";
 
 const MenuList = () => {
-  const { customerOrder } = useSelector((state) => state.order);
+  const { customerOrder, addOrderProductStatus } = useSelector(
+    (state) => state.order
+  );
   const { menuItems, fetchMenuItemsStatus } = useSelector(
     (state) => state.menu
   );
@@ -16,6 +19,17 @@ const MenuList = () => {
   useEffect(() => {
     dispatch(fetchMenuItems());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (addOrderProductStatus.error) {
+      dispatch(
+        showToast({
+          message: addOrderProductStatus.error,
+          type: "error",
+        })
+      );
+    }
+  }, [addOrderProductStatus.error, dispatch]);
 
   const handleAddOrderProduct = (item) => {
     const orderProduct = {
@@ -43,6 +57,7 @@ const MenuList = () => {
               label="Add to Order"
               className="btn-primary"
               onClick={() => handleAddOrderProduct(item)}
+              loading={addOrderProductStatus.loading}
             />
           )}
         </div>

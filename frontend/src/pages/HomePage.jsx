@@ -1,5 +1,3 @@
-import { useDispatch } from "react-redux";
-import { addOrderProduct } from "../features/order/orderSlice";
 import MenuList from "../features/menu/MenuList";
 import CustomerOrder from "../features/order/CustomerOrder";
 

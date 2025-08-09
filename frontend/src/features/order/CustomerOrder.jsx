@@ -12,7 +12,9 @@ import {
   fetchRestaurants,
   fetchRestaurantTables,
 } from "../restaurant/restaurantSlice";
+import { showToast } from "../toast/toastSlice";
 import { ORDER_STATUSES, INACTIVE_ORDER_STATUSES } from "../../constants/order";
+import { FETCH_ORDER_PRODUCTS_INTERVAL } from "../../constants/time";
 import Button from "../../components/Button";
 import Product from "../menu/Product";
 
@@ -47,7 +49,7 @@ const CustomerOrder = () => {
       if (customerOrder) {
         dispatch(fetchOrderProducts(customerOrder.id));
       }
-    }, 5000);
+    }, FETCH_ORDER_PRODUCTS_INTERVAL);
 
     return () => clearInterval(interval);
   }, [customerOrder, dispatch]);
@@ -63,6 +65,26 @@ const CustomerOrder = () => {
       dispatch(fetchRestaurantTables(selectedRestaurant));
     }
   }, [selectedRestaurant, dispatch]);
+
+  useEffect(() => {
+    if (createOrderStatus.error) {
+      dispatch(showToast({ message: createOrderStatus.error, type: "error" }));
+    }
+  }, [createOrderStatus, dispatch]);
+
+  useEffect(() => {
+    if (removeOrderProductStatus.error) {
+      dispatch(
+        showToast({ message: removeOrderProductStatus.error, type: "error" })
+      );
+    }
+  }, [removeOrderProductStatus, dispatch]);
+
+  useEffect(() => {
+    if (deleteOrderStatus.error) {
+      dispatch(showToast({ message: deleteOrderStatus.error, type: "error" }));
+    }
+  }, [deleteOrderStatus, dispatch]);
 
   const handleRestaurantChange = (e) => {
     setSelectedRestaurant(e.target.value);
@@ -191,10 +213,6 @@ const CustomerOrder = () => {
             className="btn-primary"
             loading={createOrderStatus.loading}
           />
-
-          {createOrderStatus.error && (
-            <div>Error creating order: {createOrderStatus.error}</div>
-          )}
         </div>
       );
     }

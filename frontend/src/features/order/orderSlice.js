@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { BACKEND_API_URL } from "../../constants/settings.js";
-import getAuthHeaders from "../auth/getAuthHeaders.js";
+import { BACKEND_API_URL } from "../../constants/settings";
+import getAuthHeaders from "../auth/getAuthHeaders";
 
 export const addOrderProduct = createAsyncThunk(
   "order/addOrderProduct",

@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { register } from "./authSlice.js";
+import { register } from "./authSlice";
 import AuthForm from "./AuthForm";
 
 const RegisterForm = () => {

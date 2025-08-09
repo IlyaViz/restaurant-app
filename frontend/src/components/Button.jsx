@@ -6,20 +6,20 @@ const Button = ({
   className,
   loading,
 }) => {
+  const isButtonDisabled = loading || !active;
+  const opacity = isButtonDisabled ? "opacity-50" : "opacity-100";
+  const cursor = isButtonDisabled ? "cursor-not-allowed" : "cursor-pointer";
+
   return (
     <div className="flex flex-col">
-      {loading ? (
-        <div className="loader">Loading...</div>
-      ) : (
-        <button
-          disabled={!active}
-          type={type}
-          onClick={onClick}
-          className={`${className} ${!active && "opacity-50"} cursor-pointer`}
-        >
-          {label}
-        </button>
-      )}
+      <button
+        disabled={isButtonDisabled}
+        type={type}
+        onClick={onClick}
+        className={`${className} ${opacity} ${cursor}`}
+      >
+        {loading ? "Loading..." : label}
+      </button>
     </div>
   );
 };
