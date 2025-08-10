@@ -35,9 +35,9 @@ const Header = () => {
           </NavLink>
         )}
 
-        {role === "kitchen_staff" && (
-          <NavLink to="/kitchen-staff-page">
-            <Button label="Kitchen Staff" className="btn-primary" />
+        {role && role !== "customer" && (
+          <NavLink to="/staff-page">
+            <Button label="Staff Page" className="btn-primary" />
           </NavLink>
         )}
       </nav>

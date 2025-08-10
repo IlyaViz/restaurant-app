@@ -6,7 +6,7 @@ import {
 
 export const fetchRestaurantsThunk = createAsyncThunk(
   "restaurant/fetchRestaurants",
-  async () => {
+  async (_, { rejectWithValue }) => {
     try {
       return await fetchRestaurants();
     } catch (error) {
@@ -17,7 +17,7 @@ export const fetchRestaurantsThunk = createAsyncThunk(
 
 export const fetchRestaurantTablesThunk = createAsyncThunk(
   "restaurant/fetchRestaurantTables",
-  async (restaurantId) => {
+  async (restaurantId, { rejectWithValue }) => {
     try {
       return await fetchRestaurantTables(restaurantId);
     } catch (error) {

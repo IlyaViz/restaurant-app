@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchCustomerActiveOrdersThunk,
   fetchCustomerOrderProductsThunk,
+  deleteCustomerOrderThunk,
 } from "./kitchenThunk";
 import {
   FETCH_ORDERS_INTERVAL,
@@ -33,21 +34,21 @@ const KitchenOrders = () => {
     }, FETCH_ORDER_PRODUCTS_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [dispatch]);
+  }, [customerOrders, dispatch]);
 
   return (
-    <div>
+    <>
       {customerOrders.map((customerOrder) => (
         <div key={customerOrder.id}>
           <h3>Order ID: {customerOrder.id}</h3>
           <Button
-            onClick={() => dispatch(deleteCustomerOrder(customerOrder.id))}
+            onClick={() => dispatch(deleteCustomerOrderThunk(customerOrder.id))}
           >
             Delete Order
           </Button>
         </div>
       ))}
-    </div>
+    </>
   );
 };
 

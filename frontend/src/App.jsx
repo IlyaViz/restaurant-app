@@ -3,7 +3,7 @@ import MainLayout from "./layouts/MainLayout";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import HomePage from "./pages/HomePage";
-import KitchenStaffPage from "./pages/KitchenStaffPage";
+import StaffPage from "./pages/StaffPage";
 
 const router = createBrowserRouter([
   {
@@ -23,8 +23,8 @@ const router = createBrowserRouter([
         element: <RegisterPage />,
       },
       {
-        path: "/kitchen-staff-page",
-        element: <KitchenStaffPage />,
+        path: "/staff-page",
+        element: <StaffPage />,
       },
     ],
   },

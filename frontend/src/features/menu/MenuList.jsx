@@ -41,7 +41,7 @@ const MenuList = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-8">
+    <>
       {fetchMenuItemsStatus.loading && <div>Loading menu items...</div>}
 
       {fetchMenuItemsStatus.error && (
@@ -62,7 +62,7 @@ const MenuList = () => {
           )}
         </div>
       ))}
-    </div>
+    </>
   );
 };
 
