@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  createOrder,
-  fetchOrderProducts,
-  removeOrderProduct,
-  deleteOrder,
-  updateOrderProductStatus,
-  fetchActiveOrder,
-} from "./orderThunk";
+  createOrderThunk,
+  removeOrderProductThunk,
+  fetchActiveOrderThunk,
+  fetchOrderProductsThunk,
+  updateOrderProductStatusThunk,
+  deleteOrderThunk,
+} from "./customerOrderThunk";
 import {
-  fetchRestaurants,
-  fetchRestaurantTables,
+  fetchRestaurantsThunk,
+  fetchRestaurantTablesThunk,
 } from "../restaurant/restaurantThunk";
 import { showToast } from "../toast/toastSlice";
 import { ORDER_STATUSES, INACTIVE_ORDER_STATUSES } from "../../constants/order";
@@ -23,12 +23,12 @@ const CustomerOrder = () => {
   const [selectedTable, setSelectedTable] = useState(null);
 
   const {
-    customerOrder,
+    order,
     createOrderStatus,
-    customerOrderProducts,
+    orderProducts,
     deleteOrderStatus,
     removeOrderProductStatus,
-  } = useSelector((state) => state.order);
+  } = useSelector((state) => state.customerOrder);
   const { restaurants, restaurantTables } = useSelector(
     (state) => state.restaurant
   );
@@ -43,32 +43,32 @@ const CustomerOrder = () => {
   ];
 
   useEffect(() => {
-    if (token) dispatch(fetchActiveOrder());
+    if (token) dispatch(fetchActiveOrderThunk());
   }, [token, dispatch]);
 
   useEffect(() => {
-    if (customerOrder) {
-      dispatch(fetchOrderProducts(customerOrder.id));
+    if (order) {
+      dispatch(fetchOrderProductsThunk(order.id));
     }
 
     const interval = setInterval(() => {
-      if (customerOrder) {
-        dispatch(fetchOrderProducts(customerOrder.id));
+      if (order) {
+        dispatch(fetchOrderProductsThunk(order.id));
       }
     }, FETCH_ORDER_PRODUCTS_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [customerOrder, dispatch]);
+  }, [order, dispatch]);
 
   useEffect(() => {
-    if (token && !customerOrder) {
-      dispatch(fetchRestaurants());
+    if (token && !order) {
+      dispatch(fetchRestaurantsThunk());
     }
-  }, [token, customerOrder, dispatch]);
+  }, [token, order, dispatch]);
 
   useEffect(() => {
     if (selectedRestaurant) {
-      dispatch(fetchRestaurantTables(selectedRestaurant));
+      dispatch(fetchRestaurantTablesThunk(selectedRestaurant));
     }
   }, [selectedRestaurant, dispatch]);
 
@@ -87,7 +87,7 @@ const CustomerOrder = () => {
   };
 
   const isOrderDeletable = () => {
-    return !customerOrderProducts.some(
+    return !orderProducts.some(
       (orderProduct) =>
         !Object.keys(INACTIVE_ORDER_STATUSES).includes(orderProduct.status)
     );
@@ -106,17 +106,17 @@ const CustomerOrder = () => {
       );
     }
 
-    if (customerOrder) {
+    if (order) {
       return (
         <div className="bg-blue-100 p-4 rounded-2xl">
           <div className="flex flex-col items-center">
             <h2 className="text-2xl font-bold">Active Order</h2>
 
-            <p className="text-lg">Table: {customerOrder.table}</p>
+            <p className="text-lg">Table: {order.table}</p>
 
             <Button
               label="Delete Order"
-              onClick={() => dispatch(deleteOrder(customerOrder.id))}
+              onClick={() => dispatch(deleteOrderThunk(order.id))}
               className="btn-danger"
               active={isOrderDeletable()}
               loading={deleteOrderStatus.loading}
@@ -124,7 +124,7 @@ const CustomerOrder = () => {
           </div>
 
           <div className="grid gap-8 mt-8 grid-cols-6">
-            {customerOrderProducts.map((orderProduct) => (
+            {orderProducts.map((orderProduct) => (
               <div key={orderProduct.id} className="flex flex-col gap-2">
                 <Product {...orderProduct.product} imageClassName="w-32" />
 
@@ -132,7 +132,7 @@ const CustomerOrder = () => {
                   className="text-center"
                   onChange={(e) =>
                     dispatch(
-                      updateOrderProductStatus({
+                      updateOrderProductStatusThunk({
                         orderProductId: orderProduct.id,
                         status: e.target.value,
                       })
@@ -159,7 +159,9 @@ const CustomerOrder = () => {
 
                 <Button
                   label="Remove"
-                  onClick={() => dispatch(removeOrderProduct(orderProduct.id))}
+                  onClick={() =>
+                    dispatch(removeOrderProductThunk(orderProduct.id))
+                  }
                   className="btn-danger"
                   active={isOrderProductRemovable(orderProduct)}
                   loading={removeOrderProductStatus.loading}
@@ -203,7 +205,7 @@ const CustomerOrder = () => {
           <Button
             active={!!selectedTable}
             label="Create Order"
-            onClick={() => dispatch(createOrder(selectedTable))}
+            onClick={() => dispatch(createOrderThunk(selectedTable))}
             className="btn-primary"
             loading={createOrderStatus.loading}
           />

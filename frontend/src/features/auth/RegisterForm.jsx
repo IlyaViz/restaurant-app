@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { register } from "./authThunk";
+import { registerThunk } from "./authThunk";
 import AuthForm from "./AuthForm";
 
 const RegisterForm = () => {
@@ -24,7 +24,7 @@ const RegisterForm = () => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      await dispatch(register(data)).unwrap();
+      await dispatch(registerThunk(data)).unwrap();
 
       navigate("/login");
     } catch (error) {

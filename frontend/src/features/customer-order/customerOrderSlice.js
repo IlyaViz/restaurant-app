@@ -1,19 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  addOrderProduct,
-  fetchActiveOrder,
-  createOrder,
-  fetchOrderProducts,
-  removeOrderProduct,
-  deleteOrder,
-  updateOrderProductStatus,
-} from "./orderThunk";
+  fetchActiveOrderThunk,
+  updateOrderProductStatusThunk,
+  deleteOrderThunk,
+  createOrderThunk,
+  fetchOrderProductsThunk,
+  removeOrderProductThunk,
+  addOrderProductThunk,
+} from "./customerOrderThunk";
 
 const initialState = {
-  customerOrder: null,
-  customerOrderProducts: [],
-  kitchenOrders: [],
-  allOrders: [],
+  order: null,
+  orderProducts: [],
   addOrderProductStatus: {
     loading: false,
     error: null,
@@ -44,111 +42,113 @@ const initialState = {
   },
 };
 
-const orderSlice = createSlice({
-  name: "order",
+const customerOrderSlice = createSlice({
+  name: "customerOrder",
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(addOrderProduct.pending, (state) => {
+      .addCase(addOrderProductThunk.pending, (state) => {
         state.addOrderProductStatus.loading = true;
         state.addOrderProductStatus.error = null;
       })
-      .addCase(addOrderProduct.fulfilled, (state, action) => {
-        state.customerOrderProducts.push(action.payload);
+      .addCase(addOrderProductThunk.fulfilled, (state, action) => {
+        state.orderProducts.push(action.payload);
         state.addOrderProductStatus.loading = false;
       })
-      .addCase(addOrderProduct.rejected, (state, action) => {
+      .addCase(addOrderProductThunk.rejected, (state, action) => {
         state.addOrderProductStatus.loading = false;
         state.addOrderProductStatus.error = action.payload;
       })
 
-      .addCase(fetchActiveOrder.pending, (state) => {
+      .addCase(fetchActiveOrderThunk.pending, (state) => {
         state.fetchActiveOrderStatus.loading = true;
         state.fetchActiveOrderStatus.error = null;
       })
-      .addCase(fetchActiveOrder.fulfilled, (state, action) => {
-        state.customerOrder = action.payload;
+      .addCase(fetchActiveOrderThunk.fulfilled, (state, action) => {
+        state.order = action.payload;
         state.fetchActiveOrderStatus.loading = false;
       })
-      .addCase(fetchActiveOrder.rejected, (state, action) => {
+      .addCase(fetchActiveOrderThunk.rejected, (state, action) => {
         state.fetchActiveOrderStatus.loading = false;
         state.fetchActiveOrderStatus.error = action.payload;
       })
 
-      .addCase(createOrder.pending, (state) => {
+      .addCase(createOrderThunk.pending, (state) => {
         state.createOrderStatus.loading = true;
         state.createOrderStatus.error = null;
       })
-      .addCase(createOrder.fulfilled, (state, action) => {
-        state.customerOrder = action.payload;
+      .addCase(createOrderThunk.fulfilled, (state, action) => {
+        state.order = action.payload;
         state.createOrderStatus.loading = false;
       })
-      .addCase(createOrder.rejected, (state, action) => {
+      .addCase(createOrderThunk.rejected, (state, action) => {
         state.createOrderStatus.loading = false;
         state.createOrderStatus.error = action.payload;
       })
 
-      .addCase(fetchOrderProducts.pending, (state) => {
+      .addCase(fetchOrderProductsThunk.pending, (state) => {
         state.fetchOrderProductsStatus.loading = true;
         state.fetchOrderProductsStatus.error = null;
       })
-      .addCase(fetchOrderProducts.fulfilled, (state, action) => {
-        state.customerOrderProducts = action.payload;
+      .addCase(fetchOrderProductsThunk.fulfilled, (state, action) => {
+        state.orderProducts = action.payload;
         state.fetchOrderProductsStatus.loading = false;
       })
-      .addCase(fetchOrderProducts.rejected, (state, action) => {
+      .addCase(fetchOrderProductsThunk.rejected, (state, action) => {
         state.fetchOrderProductsStatus.loading = false;
         state.fetchOrderProductsStatus.error = action.payload;
       })
 
-      .addCase(removeOrderProduct.pending, (state) => {
+      .addCase(removeOrderProductThunk.pending, (state) => {
         state.removeOrderProductStatus.loading = true;
         state.removeOrderProductStatus.error = null;
       })
-      .addCase(removeOrderProduct.fulfilled, (state, action) => {
-        state.customerOrderProducts = state.customerOrderProducts.filter(
+      .addCase(removeOrderProductThunk.fulfilled, (state, action) => {
+        state.orderProducts = state.orderProducts.filter(
           (product) => product.id !== action.payload
         );
         state.removeOrderProductStatus.loading = false;
       })
-      .addCase(removeOrderProduct.rejected, (state, action) => {
+      .addCase(removeOrderProductThunk.rejected, (state, action) => {
         state.removeOrderProductStatus.loading = false;
         state.removeOrderProductStatus.error = action.payload;
       })
 
-      .addCase(deleteOrder.pending, (state) => {
+      .addCase(deleteOrderThunk.pending, (state) => {
         state.deleteOrderStatus.loading = true;
         state.deleteOrderStatus.error = null;
       })
-      .addCase(deleteOrder.fulfilled, (state, action) => {
-        state.customerOrder = null;
+      .addCase(deleteOrderThunk.fulfilled, (state) => {
+        state.order = null;
         state.deleteOrderStatus.loading = false;
       })
-      .addCase(deleteOrder.rejected, (state, action) => {
+      .addCase(deleteOrderThunk.rejected, (state, action) => {
         state.deleteOrderStatus.loading = false;
         state.deleteOrderStatus.error = action.payload;
       })
 
-      .addCase(updateOrderProductStatus.pending, (state) => {
+      .addCase(updateOrderProductStatusThunk.pending, (state) => {
         state.updateOrderProductStatus.loading = true;
         state.updateOrderProductStatus.error = null;
       })
-      .addCase(updateOrderProductStatus.fulfilled, (state, action) => {
+      .addCase(updateOrderProductStatusThunk.fulfilled, (state, action) => {
         const { id, status } = action.payload;
 
-        const orderProduct = state.customerOrderProducts.find(
+        const orderProduct = state.orderProducts.find(
           (orderProduct) => orderProduct.id === id
         );
 
-        orderProduct.status = status;
+        if (orderProduct) {
+          orderProduct.status = status;
+        }
 
         state.updateOrderProductStatus.loading = false;
       })
-      .addCase(updateOrderProductStatus.rejected, (state, action) => {
+      .addCase(updateOrderProductStatusThunk.rejected, (state, action) => {
         state.updateOrderProductStatus.loading = false;
         state.updateOrderProductStatus.error = action.payload;
       });
   },
 });
 
-export default orderSlice.reducer;
+export default customerOrderSlice.reducer;

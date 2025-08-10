@@ -1,4 +1,4 @@
-export const errorToMessage = (error) => {
+const errorToMessage = (error) => {
   if (typeof error === "string") {
     return error;
   }
@@ -11,3 +11,5 @@ export const errorToMessage = (error) => {
     return Object.values(error).join(", ");
   }
 };
+
+export default errorToMessage;

@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../features/auth/authSlice"
+import { logout } from "../features/auth/authSlice";
 import Button from "./Button";
 
 const Header = () => {
@@ -35,9 +35,9 @@ const Header = () => {
           </NavLink>
         )}
 
-        {role && role !== "customer" && (
-          <NavLink to="/staff-page">
-            <Button label="Job Management" className="btn-primary" />
+        {role === "kitchen_staff" && (
+          <NavLink to="/kitchen-staff-page">
+            <Button label="Kitchen Staff" className="btn-primary" />
           </NavLink>
         )}
       </nav>

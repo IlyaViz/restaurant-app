@@ -1,7 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { login } from "./authThunk";
+import { loginThunk } from "./authThunk";
 import AuthForm from "./AuthForm";
 
 const LoginForm = () => {
@@ -23,7 +23,7 @@ const LoginForm = () => {
     const data = Object.fromEntries(formData.entries());
 
     try {
-      await dispatch(login(data)).unwrap();
+      await dispatch(loginThunk(data)).unwrap();
 
       navigate("/");
     } catch (error) {

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { hideToast } from "./toastSlice";
 import { TOAST_DISPLAY_DURATION } from "../../constants/time";
-import { errorToMessage } from "../../utils/handleError";
+import errorToMessage from "../../utils/errorToMessage";
 
 const Toast = () => {
   const { message, type } = useSelector((state) => state.toast);

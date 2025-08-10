@@ -1,53 +1,25 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { BACKEND_API_URL } from "../../constants/settings";
-import getAuthHeaders from "../auth/getAuthHeaders";
+import {
+  fetchRestaurants,
+  fetchRestaurantTables,
+} from "../../api/restaurantApi";
 
-export const fetchRestaurants = createAsyncThunk(
+export const fetchRestaurantsThunk = createAsyncThunk(
   "restaurant/fetchRestaurants",
-  async (_, { rejectWithValue, getState }) => {
+  async () => {
     try {
-      const response = await fetch(
-        `${BACKEND_API_URL}/restaurant-management/restaurant/`,
-        {
-          headers: getAuthHeaders(getState),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-
-        return rejectWithValue(error);
-      }
-
-      const data = await response.json();
-
-      return data;
+      return await fetchRestaurants();
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
 
-export const fetchRestaurantTables = createAsyncThunk(
+export const fetchRestaurantTablesThunk = createAsyncThunk(
   "restaurant/fetchRestaurantTables",
-  async (restaurantId, { rejectWithValue, getState }) => {
+  async (restaurantId) => {
     try {
-      const response = await fetch(
-        `${BACKEND_API_URL}/restaurant-management/restaurant/${restaurantId}/tables/`,
-        {
-          headers: getAuthHeaders(getState),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-
-        return rejectWithValue(error);
-      }
-
-      const data = await response.json();
-
-      return data;
+      return await fetchRestaurantTables(restaurantId);
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -1,5 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchRestaurants, fetchRestaurantTables } from "./restaurantThunk";
+import {
+  fetchRestaurantsThunk,
+  fetchRestaurantTablesThunk,
+} from "./restaurantThunk";
 
 const initialState = {
   restaurants: [],
@@ -19,29 +22,29 @@ const restaurantSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRestaurants.pending, (state) => {
+      .addCase(fetchRestaurantsThunk.pending, (state) => {
         state.fetchRestaurantsStatus.loading = true;
         state.fetchRestaurantsStatus.error = null;
       })
-      .addCase(fetchRestaurants.fulfilled, (state, action) => {
+      .addCase(fetchRestaurantsThunk.fulfilled, (state, action) => {
         state.restaurants = action.payload;
         state.fetchRestaurantsStatus.loading = false;
       })
-      .addCase(fetchRestaurants.rejected, (state, action) => {
+      .addCase(fetchRestaurantsThunk.rejected, (state, action) => {
         state.fetchRestaurantsStatus.loading = false;
         state.fetchRestaurantsStatus.error = action.payload;
       })
 
-      .addCase(fetchRestaurantTables.pending, (state) => {
+      .addCase(fetchRestaurantTablesThunk.pending, (state) => {
         state.restaurantTables = [];
         state.fetchRestaurantTablesStatus.loading = true;
         state.fetchRestaurantTablesStatus.error = null;
       })
-      .addCase(fetchRestaurantTables.fulfilled, (state, action) => {
+      .addCase(fetchRestaurantTablesThunk.fulfilled, (state, action) => {
         state.restaurantTables = action.payload;
         state.fetchRestaurantTablesStatus.loading = false;
       })
-      .addCase(fetchRestaurantTables.rejected, (state, action) => {
+      .addCase(fetchRestaurantTablesThunk.rejected, (state, action) => {
         state.fetchRestaurantTablesStatus.loading = false;
         state.fetchRestaurantTablesStatus.error = action.payload;
       });

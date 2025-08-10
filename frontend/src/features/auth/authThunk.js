@@ -1,65 +1,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { BACKEND_API_URL } from "../../constants/settings";
-import { HEADERS } from "../../constants/fetch";
+import { login, register } from "../../api/authApi";
 
-export const login = createAsyncThunk(
+export const loginThunk = createAsyncThunk(
   "auth/login",
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        `${BACKEND_API_URL}/account-management/obtain-token/`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            username,
-            password,
-          }),
-          headers: HEADERS,
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-
-        return rejectWithValue(error);
-      }
-
-      const data = await response.json();
-
-      return data;
+      return await login({ username, password });
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
 
-export const register = createAsyncThunk(
+export const registerThunk = createAsyncThunk(
   "auth/register",
-
   async ({ username, email, password }, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        `${BACKEND_API_URL}/account-management/register/`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            username,
-            email,
-            password,
-          }),
-          headers: HEADERS,
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-
-        return rejectWithValue(error);
-      }
-
-      const data = await response.json();
-
-      return data;
+      return await register({ username, email, password });
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMenuItems } from "./menuThunk";
-import { addOrderProduct } from "../order/orderThunk";
+import { fetchMenuItemsThunk } from "./menuThunk";
+import { addOrderProductThunk } from "../customer-order/customerOrderThunk";
 import { showToast } from "../toast/toastSlice";
 import Product from "./Product";
 import Button from "../../components/Button";
 
 const MenuList = () => {
-  const { customerOrder, addOrderProductStatus } = useSelector(
-    (state) => state.order
+  const { order, addOrderProductStatus } = useSelector(
+    (state) => state.customerOrder
   );
   const { menuItems, fetchMenuItemsStatus } = useSelector(
     (state) => state.menu
@@ -17,7 +17,7 @@ const MenuList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchMenuItems());
+    dispatch(fetchMenuItemsThunk());
   }, [dispatch]);
 
   useEffect(() => {
@@ -33,11 +33,11 @@ const MenuList = () => {
 
   const handleAddOrderProduct = (item) => {
     const orderProduct = {
-      orderId: customerOrder.id,
+      orderId: order.id,
       productId: item.id,
     };
 
-    dispatch(addOrderProduct(orderProduct));
+    dispatch(addOrderProductThunk(orderProduct));
   };
 
   return (
@@ -52,7 +52,7 @@ const MenuList = () => {
         <div key={item.id} className="flex flex-col gap-1">
           <Product {...item} imageClassName="w-64" />
 
-          {customerOrder && (
+          {order && (
             <Button
               label="Add to Order"
               className="btn-primary"

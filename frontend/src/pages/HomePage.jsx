@@ -1,5 +1,5 @@
 import MenuList from "../features/menu/MenuList";
-import CustomerOrder from "../features/order/CustomerOrder";
+import CustomerOrder from "../features/customer-order/CustomerOrder";
 
 const HomePage = () => {
   return (
