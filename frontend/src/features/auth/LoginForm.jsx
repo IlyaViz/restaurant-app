@@ -16,14 +16,9 @@ const LoginForm = () => {
     { name: "password", label: "Password", type: "password", required: true },
   ];
 
-  const onFormSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-
+  const onFormSubmit = async (formData) => {
     try {
-      await dispatch(loginThunk(data)).unwrap();
+      await dispatch(loginThunk(formData)).unwrap();
 
       navigate("/");
     } catch (error) {
@@ -34,10 +29,9 @@ const LoginForm = () => {
   return (
     <AuthForm
       fields={fields}
-      onSubmit={onFormSubmit}
+      onFormSubmit={onFormSubmit}
       submitLabel="Login"
-      loading={loginStatus.loading}
-      error={loginStatus.error}
+      submitStatus={loginStatus}
     />
   );
 };

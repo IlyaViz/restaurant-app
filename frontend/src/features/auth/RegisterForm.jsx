@@ -17,14 +17,9 @@ const RegisterForm = () => {
     { name: "password", label: "Password", type: "password", required: true },
   ];
 
-  const onFormSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
-
+  const onFormSubmit = async (formData) => {
     try {
-      await dispatch(registerThunk(data)).unwrap();
+      await dispatch(registerThunk(formData)).unwrap();
 
       navigate("/login");
     } catch (error) {
@@ -35,10 +30,9 @@ const RegisterForm = () => {
   return (
     <AuthForm
       fields={fields}
-      onSubmit={onFormSubmit}
+      onFormSubmit={onFormSubmit}
       submitLabel="Register"
-      loading={registerStatus.loading}
-      error={registerStatus.error}
+      submitStatus={registerStatus}
     />
   );
 };
