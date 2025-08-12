@@ -69,6 +69,7 @@ const customerOrderSlice = createSlice({
         state.fetchActiveOrderStatus.loading = false;
       })
       .addCase(fetchActiveOrderThunk.rejected, (state, action) => {
+        state.order = null;
         state.fetchActiveOrderStatus.loading = false;
         state.fetchActiveOrderStatus.error = action.payload;
       })

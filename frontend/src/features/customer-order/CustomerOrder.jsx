@@ -52,18 +52,16 @@ const CustomerOrder = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (order) {
-      dispatch(fetchOrderProductsThunk(order.id));
-    }
+    if (!order) return;
+
+    dispatch(fetchOrderProductsThunk(order.id));
 
     const interval = setInterval(() => {
-      if (order) {
-        dispatch(fetchOrderProductsThunk(order.id));
-      }
+      dispatch(fetchOrderProductsThunk(order.id));
     }, FETCH_ORDER_PRODUCTS_INTERVAL);
 
     return () => clearInterval(interval);
-  }, [order, dispatch]);
+  }, [order?.id, dispatch]);
 
   return (
     <>
