@@ -3,14 +3,23 @@ import { useDispatch } from "react-redux";
 import { showToast } from "../features/toast/toastSlice";
 import Button from "../components/Button";
 
-const Order = ({ order, isDeletable, onDeleteClick, deleteStatus }) => {
+const Order = ({ order, actions }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (deleteStatus.error) {
-      dispatch(showToast({ message: deleteStatus.error, type: "error" }));
+    if (actions) {
+      actions.forEach((action) => {
+        if (action.status.error) {
+          dispatch(
+            showToast({
+              type: "error",
+              message: action.status.error,
+            })
+          );
+        }
+      });
     }
-  }, [deleteStatus.error, dispatch]);
+  }, [actions, dispatch]);
 
   return (
     <div className="flex flex-col items-center">
@@ -18,14 +27,16 @@ const Order = ({ order, isDeletable, onDeleteClick, deleteStatus }) => {
 
       <p className="text-lg">Table: {order.table}</p>
 
-      {isDeletable && (
-        <Button
-          label="Delete Order"
-          onClick={() => onDeleteClick()}
-          className="btn-danger"
-          loading={deleteStatus.loading}
-        />
-      )}
+      {actions &&
+        actions.map((action) => (
+          <Button
+            key={action.label}
+            label={action.label}
+            onClick={() => action.onClick(order.id)}
+            className={action.buttonClassName}
+            loading={action.status.loading}
+          />
+        ))}
     </div>
   );
 };

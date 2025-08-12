@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { showToast } from "../features/toast/toastSlice";
-import { ORDER_STATUSES } from "../constants/order";
+import { ORDER_STATUS_LABELS } from "../constants/order";
 import Product from "../features/menu/Product";
 import Button from "./Button";
 
@@ -11,23 +11,23 @@ const OrderProducts = ({
   onOrderProductStatusChange,
   isOrderProductRemovable,
   onOrderProductRemoveClick,
-  orderProductRemoveStatus,
+  removeOrderProductStatus,
 }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (orderProductRemoveStatus.error) {
+    if (removeOrderProductStatus?.error) {
       dispatch(
-        showToast({ message: orderProductRemoveStatus.error, type: "error" })
+        showToast({ message: removeOrderProductStatus.error, type: "error" })
       );
     }
-  }, [orderProductRemoveStatus.error, dispatch]);
+  }, [removeOrderProductStatus?.error, dispatch]);
 
   return (
-    <>
+    <div className="grid grid-cols-8 gap-8">
       {orderProducts.map((orderProduct) => (
-        <div key={orderProduct.id} className="flex flex-col gap-2">
-          <Product {...orderProduct.product} imageClassName="w-32" />
+        <div key={orderProduct.id} className="flex flex-col items-center">
+          <Product {...orderProduct.product} imageClassName="w-36" />
 
           <select
             className="text-center"
@@ -35,15 +35,18 @@ const OrderProducts = ({
               onOrderProductStatusChange(orderProduct.id, e.target.value)
             }
           >
-            {!allowedOrderProductStatuses.includes(orderProduct.status) && (
-              <option value="">{ORDER_STATUSES[orderProduct.status]}</option>
-            )}
+            <option value={orderProduct.status}>
+              {ORDER_STATUS_LABELS[orderProduct.status]} (Current)
+            </option>
 
-            {allowedOrderProductStatuses.map((status) => (
-              <option key={status} value={status}>
-                {ORDER_STATUSES[status]}
-              </option>
-            ))}
+            {allowedOrderProductStatuses.includes(orderProduct.status) &&
+              allowedOrderProductStatuses
+                .filter((status) => status !== orderProduct.status)
+                .map((status) => (
+                  <option key={status} value={status}>
+                    {ORDER_STATUS_LABELS[status]}
+                  </option>
+                ))}
           </select>
 
           {isOrderProductRemovable(orderProduct) && (
@@ -51,12 +54,12 @@ const OrderProducts = ({
               label="Remove"
               onClick={() => onOrderProductRemoveClick(orderProduct.id)}
               className="btn-danger"
-              loading={orderProductRemoveStatus.loading}
+              loading={removeOrderProductStatus.loading}
             />
           )}
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

@@ -42,7 +42,7 @@ class OrderViewSet(ModelViewSet):
         if self.action == "destroy":
             return [IsAuthenticated(), CanDestroyOrder()]
 
-        if self.action in ["update", "partial_update"]:
+        if self.action in ["update", "partial_update", "finish_order"]:
             return [IsAuthenticated(), CanUpdateOrder()]
 
         if self.action == "order_products":

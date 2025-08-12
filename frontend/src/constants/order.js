@@ -1,13 +1,20 @@
-export const ORDER_STATUSES = {
-  draft: "Draft",
-  pending: "Pending",
-  in_progress: "In Progress",
-  completed: "Completed",
-  paid: "Paid",
-  cancelled: "Cancelled",
+export const ORDER_STATUS = {
+  DRAFT: "draft",
+  PENDING: "pending",
+  IN_PROGRESS: "in_progress",
+  COMPLETED: "completed",
+  PAID: "paid",
 };
 
-export const INACTIVE_ORDER_STATUSES = {
-  draft: "Draft",
-  pending: "Pending",
+export const ORDER_STATUS_LABELS = {
+  [ORDER_STATUS.DRAFT]: "Draft",
+  [ORDER_STATUS.PENDING]: "Pending",
+  [ORDER_STATUS.IN_PROGRESS]: "In Progress",
+  [ORDER_STATUS.COMPLETED]: "Completed",
+  [ORDER_STATUS.PAID]: "Paid",
 };
+
+export const INACTIVE_ORDER_STATUSES = [
+  ORDER_STATUS.DRAFT,
+  ORDER_STATUS.PENDING,
+];

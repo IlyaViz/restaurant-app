@@ -3,7 +3,8 @@ import {
   fetchActiveOrders,
   deleteOrder,
   updateOrderProductStatus,
-  fetchOrderProducts
+  fetchOrderProducts,
+  finishOrder,
 } from "../../api/orderApi";
 
 export const fetchCustomerActiveOrdersThunk = createAsyncThunk(
@@ -52,6 +53,19 @@ export const fetchCustomerOrderProductsThunk = createAsyncThunk(
       const token = getState().auth.token;
 
       return await fetchOrderProducts(orderId, token);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const finishCustomerOrderThunk = createAsyncThunk(
+  "kitchen/finishCustomerOrder",
+  async (orderId, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().auth.token;
+
+      return await finishOrder(orderId, token);
     } catch (error) {
       return rejectWithValue(error.message);
     }

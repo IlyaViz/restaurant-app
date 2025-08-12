@@ -19,6 +19,12 @@ const OrderCreator = () => {
 
   const dispatch = useDispatch();
 
+  const handleRestaurantChange = (e) => {
+    setSelectedRestaurant(e.target.value);
+
+    setSelectedTable(null);
+  };
+
   useEffect(() => {
     dispatch(fetchRestaurantsThunk());
   }, [dispatch]);
@@ -34,12 +40,6 @@ const OrderCreator = () => {
       dispatch(showToast({ message: createOrderStatus.error, type: "error" }));
     }
   }, [createOrderStatus.error, dispatch]);
-
-  const handleRestaurantChange = (e) => {
-    setSelectedRestaurant(e.target.value);
-
-    setSelectedTable(null);
-  };
 
   return (
     <div className="flex flex-col items-center">

@@ -9,7 +9,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   return (
-    <header>
+    <header className="mb-8 mt-4">
       <nav className="flex gap-4 justify-center m-1 items-center">
         <NavLink to="/">
           <Button label="Home" className="btn-primary" />

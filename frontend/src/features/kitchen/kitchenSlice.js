@@ -4,6 +4,7 @@ import {
   updateCustomerOrderProductStatusThunk,
   deleteCustomerOrderThunk,
   fetchCustomerOrderProductsThunk,
+  finishCustomerOrderThunk,
 } from "./kitchenThunk";
 
 const initialState = {
@@ -22,6 +23,10 @@ const initialState = {
     error: null,
   },
   deleteCustomerOrderStatus: {
+    loading: false,
+    error: null,
+  },
+  finishCustomerOrderStatus: {
     loading: false,
     error: null,
   },
@@ -48,7 +53,14 @@ const kitchenSlice = createSlice({
         state.fetchCustomerOrderProductsStatus.loading = true;
       })
       .addCase(fetchCustomerOrderProductsThunk.fulfilled, (state, action) => {
-        state.customerOrderProducts = action.payload;
+        const orderId = action.meta.arg;
+
+        state.customerOrderProducts = state.customerOrderProducts.filter(
+          (orderProduct) => orderProduct.order !== orderId
+        );
+
+        state.customerOrderProducts.push(...action.payload);
+
         state.fetchCustomerOrderProductsStatus.loading = false;
       })
       .addCase(fetchCustomerOrderProductsThunk.rejected, (state, action) => {
@@ -62,6 +74,16 @@ const kitchenSlice = createSlice({
       .addCase(
         updateCustomerOrderProductStatusThunk.fulfilled,
         (state, action) => {
+          const { id, status } = action.payload;
+
+          const orderProduct = state.customerOrderProducts.find(
+            (orderProduct) => orderProduct.id === id
+          );
+
+          if (orderProduct) {
+            orderProduct.status = status;
+          }
+
           state.updateCustomerOrderProductStatus.loading = false;
         }
       )
@@ -77,11 +99,29 @@ const kitchenSlice = createSlice({
         state.deleteCustomerOrderStatus.loading = true;
       })
       .addCase(deleteCustomerOrderThunk.fulfilled, (state, action) => {
+        state.customerOrders = state.customerOrders.filter(
+          (order) => order.id !== action.payload
+        );
         state.deleteCustomerOrderStatus.loading = false;
       })
       .addCase(deleteCustomerOrderThunk.rejected, (state, action) => {
         state.deleteCustomerOrderStatus.loading = false;
         state.deleteCustomerOrderStatus.error = action.payload;
+      })
+
+      .addCase(finishCustomerOrderThunk.pending, (state) => {
+        state.finishCustomerOrderStatus.loading = true;
+      })
+      .addCase(finishCustomerOrderThunk.fulfilled, (state, action) => {
+        state.customerOrders = state.customerOrders.filter(
+          (order) => order.id !== action.payload.id
+        );
+
+        state.finishCustomerOrderStatus.loading = false;
+      })
+      .addCase(finishCustomerOrderThunk.rejected, (state, action) => {
+        state.finishCustomerOrderStatus.loading = false;
+        state.finishCustomerOrderStatus.error = action.payload;
       });
   },
 });

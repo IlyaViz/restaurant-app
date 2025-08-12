@@ -16,6 +16,15 @@ const MenuList = () => {
 
   const dispatch = useDispatch();
 
+  const handleAddOrderProduct = (item) => {
+    const orderProduct = {
+      orderId: order.id,
+      productId: item.id,
+    };
+
+    dispatch(addOrderProductThunk(orderProduct));
+  };
+
   useEffect(() => {
     dispatch(fetchMenuItemsThunk());
   }, [dispatch]);
@@ -30,15 +39,6 @@ const MenuList = () => {
       );
     }
   }, [addOrderProductStatus.error, dispatch]);
-
-  const handleAddOrderProduct = (item) => {
-    const orderProduct = {
-      orderId: order.id,
-      productId: item.id,
-    };
-
-    dispatch(addOrderProductThunk(orderProduct));
-  };
 
   return (
     <>

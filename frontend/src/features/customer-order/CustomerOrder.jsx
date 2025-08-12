@@ -1,30 +1,89 @@
-import { useSelector } from "react-redux";
-import ActiveOrder from "./ActiveOrder";
-import ActiveOrderProducts from "./ActiveOrderProducts";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  fetchOrderProductsThunk,
+  fetchActiveOrderThunk,
+  deleteOrderThunk,
+  removeOrderProductThunk,
+  updateOrderProductStatusThunk,
+} from "./customerOrderThunk";
+import { INACTIVE_ORDER_STATUSES } from "../../constants/order";
+import {
+  FETCH_ORDER_INTERVAL,
+  FETCH_ORDER_PRODUCTS_INTERVAL,
+} from "../../constants/time";
+import OrderDisplay from "../../components/OrderDisplay";
 import OrderCreator from "./OrderCreator";
+import isOrderDeletable from "../../utils/isOrderDeletable";
 
 const CustomerOrder = () => {
-  const token = useSelector((state) => state.auth.token);
-  const order = useSelector((state) => state.customerOrder.order);
+  const { order, orderProducts, removeOrderProductStatus, deleteOrderStatus } =
+    useSelector((state) => state.customerOrder);
+
+  const dispatch = useDispatch();
+
+  const isOrderProductRemovable = (orderProduct) => {
+    return INACTIVE_ORDER_STATUSES.includes(orderProduct.status);
+  };
+
+  const getOrderActions = () => {
+    const actions = [];
+
+    if (isOrderDeletable(orderProducts)) {
+      actions.push({
+        label: "Delete Order",
+        onClick: (orderId) => dispatch(deleteOrderThunk(orderId)),
+        buttonClassName: "btn-danger",
+        status: deleteOrderStatus,
+      });
+    }
+
+    return actions;
+  };
+
+  useEffect(() => {
+    dispatch(fetchActiveOrderThunk());
+
+    const interval = setInterval(() => {
+      dispatch(fetchActiveOrderThunk());
+    }, FETCH_ORDER_INTERVAL);
+
+    return () => clearInterval(interval);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (order) {
+      dispatch(fetchOrderProductsThunk(order.id));
+    }
+
+    const interval = setInterval(() => {
+      if (order) {
+        dispatch(fetchOrderProductsThunk(order.id));
+      }
+    }, FETCH_ORDER_PRODUCTS_INTERVAL);
+
+    return () => clearInterval(interval);
+  }, [order, dispatch]);
 
   return (
     <>
-      {!token ? (
-        <div className="text-center text-2xl">
-          Please log in to create an order.
-        </div>
+      {order && orderProducts ? (
+        <OrderDisplay
+          order={order}
+          orderProducts={orderProducts}
+          orderActions={getOrderActions()}
+          allowedOrderProductStatuses={INACTIVE_ORDER_STATUSES}
+          onOrderProductStatusChange={(orderProductId, status) => {
+            dispatch(updateOrderProductStatusThunk({ orderProductId, status }));
+          }}
+          isOrderProductRemovable={isOrderProductRemovable}
+          onOrderProductRemoveClick={(orderProductId) =>
+            dispatch(removeOrderProductThunk(orderProductId))
+          }
+          removeOrderProductStatus={removeOrderProductStatus}
+        />
       ) : (
-        <div className="bg-blue-100 p-4 rounded-2xl">
-          <ActiveOrder />
-
-          {order && (
-            <div className="grid gap-8 mt-8 grid-cols-6">
-              <ActiveOrderProducts />
-            </div>
-          )}
-
-          {!order && <OrderCreator />}
-        </div>
+        <OrderCreator />
       )}
     </>
   );

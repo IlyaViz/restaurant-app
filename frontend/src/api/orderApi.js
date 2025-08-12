@@ -82,3 +82,13 @@ export const createOrder = async (table, token) => {
     body: JSON.stringify({ table }),
   });
 };
+
+export const finishOrder = async (orderId, token) => {
+  return await fetchDefault(
+    `${BACKEND_API_URL}/order-management/order/${orderId}/finish-order/`,
+    {
+      method: "PATCH",
+      headers: getAuthHeaders(token),
+    }
+  );
+};

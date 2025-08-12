@@ -1,0 +1,29 @@
+import Order from "./Order";
+import OrderProducts from "./OrderProducts";
+
+const OrderDisplay = ({
+  order,
+  orderProducts,
+  orderActions,
+  allowedOrderProductStatuses,
+  onOrderProductStatusChange,
+  isOrderProductRemovable,
+  onOrderProductRemoveClick,
+  removeOrderProductStatus,
+}) => {
+  return (
+    <div className="flex flex-col gap-8 bg-blue-100 p-4 rounded-4xl">
+      <Order order={order} actions={orderActions} />
+      <OrderProducts
+        orderProducts={orderProducts}
+        allowedOrderProductStatuses={allowedOrderProductStatuses}
+        onOrderProductStatusChange={onOrderProductStatusChange}
+        isOrderProductRemovable={isOrderProductRemovable}
+        onOrderProductRemoveClick={onOrderProductRemoveClick}
+        removeOrderProductStatus={removeOrderProductStatus}
+      />
+    </div>
+  );
+};
+
+export default OrderDisplay;

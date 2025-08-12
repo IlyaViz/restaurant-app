@@ -36,7 +36,7 @@ const authSlice = createSlice({
         state.loginStatus.error = null;
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
-        state.username = action.meta.arg.username;
+        state.username = action.payload.username;
         state.token = action.payload.token;
         state.role = action.payload.role;
         state.loginStatus.loading = false;

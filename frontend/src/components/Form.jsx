@@ -6,19 +6,20 @@ import Button from "./Button";
 
 const Form = ({ fields, onFormSubmit, submitLabel, submitStatus }) => {
   const [formData, setFormData] = useState({});
+  
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (submitStatus.error) {
-      dispatch(showToast({ message: submitStatus.error, type: "error" }));
-    }
-  }, [submitStatus.error, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     onFormSubmit(formData);
   };
+
+  useEffect(() => {
+    if (submitStatus.error) {
+      dispatch(showToast({ message: submitStatus.error, type: "error" }));
+    }
+  }, [submitStatus.error, dispatch]);
 
   return (
     <form
