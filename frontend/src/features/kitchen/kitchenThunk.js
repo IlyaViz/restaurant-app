@@ -35,11 +35,11 @@ export const deleteCustomerOrderThunk = createAsyncThunk(
 
 export const updateCustomerOrderProductStatusThunk = createAsyncThunk(
   "kitchen/updateCustomerOrderProductStatus",
-  async (orderData, { rejectWithValue, getState }) => {
+  async ({ orderProductId, status }, { rejectWithValue, getState }) => {
     try {
       const token = getState().auth.token;
 
-      return await updateOrderProductStatus(orderData, token);
+      return await updateOrderProductStatus({ orderProductId, status }, token);
     } catch (error) {
       return rejectWithValue(error.message);
     }

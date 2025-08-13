@@ -1,25 +1,18 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { showToast } from "../features/toast/toastSlice";
+import useStatusesToast from "../hooks/useStatusesToast";
 import Input from "./Input";
 import Button from "./Button";
 
 const Form = ({ fields, onFormSubmit, submitLabel, submitStatus }) => {
   const [formData, setFormData] = useState({});
-  
-  const dispatch = useDispatch();
+
+  useStatusesToast([submitStatus]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     onFormSubmit(formData);
   };
-
-  useEffect(() => {
-    if (submitStatus.error) {
-      dispatch(showToast({ message: submitStatus.error, type: "error" }));
-    }
-  }, [submitStatus.error, dispatch]);
 
   return (
     <form
@@ -44,7 +37,7 @@ const Form = ({ fields, onFormSubmit, submitLabel, submitStatus }) => {
           type="submit"
           label={submitLabel}
           className="btn-primary"
-          loading={submitStatus.loading}
+          status={submitStatus}
         />
       </div>
     </form>

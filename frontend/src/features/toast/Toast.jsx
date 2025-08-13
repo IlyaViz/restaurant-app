@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { hideToast } from "./toastSlice";
 import { TOAST_DISPLAY_DURATION } from "../../constants/time";
+import TOAST_TYPE from "../../enums/toastType";
 import errorToMessage from "../../utils/errorToMessage";
 
 const Toast = () => {
@@ -13,7 +14,7 @@ const Toast = () => {
   let messageToDisplay;
 
   switch (type) {
-    case "error":
+    case TOAST_TYPE.ERROR:
       color = "bg-red-500 text-white";
       messageToDisplay = errorToMessage(message);
       break;

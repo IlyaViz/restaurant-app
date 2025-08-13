@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchMenuItemsThunk } from "./menuThunk";
 import { addOrderProductThunk } from "../customer-order/customerOrderThunk";
-import { showToast } from "../toast/toastSlice";
-import Product from "./Product";
+import Product from "../../components/Product";
 import Button from "../../components/Button";
 
 const MenuList = () => {
@@ -29,17 +28,6 @@ const MenuList = () => {
     dispatch(fetchMenuItemsThunk());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (addOrderProductStatus.error) {
-      dispatch(
-        showToast({
-          message: addOrderProductStatus.error,
-          type: "error",
-        })
-      );
-    }
-  }, [addOrderProductStatus.error, dispatch]);
-
   return (
     <>
       {fetchMenuItemsStatus.loading && <div>Loading menu items...</div>}
@@ -57,7 +45,7 @@ const MenuList = () => {
               label="Add to Order"
               className="btn-primary"
               onClick={() => handleAddOrderProduct(item)}
-              loading={addOrderProductStatus.loading}
+              status={addOrderProductStatus}
             />
           )}
         </div>

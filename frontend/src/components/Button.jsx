@@ -1,12 +1,9 @@
-const Button = ({
-  active = true,
-  type,
-  label,
-  onClick,
-  className,
-  loading,
-}) => {
-  const isButtonDisabled = loading || !active;
+import useStatusesToast from "../hooks/useStatusesToast";
+
+const Button = ({ active = true, type, label, onClick, className, status }) => {
+  useStatusesToast([status]);
+
+  const isButtonDisabled = status?.loading || !active;
   const opacity = isButtonDisabled ? "opacity-50" : "opacity-100";
   const cursor = isButtonDisabled ? "cursor-not-allowed" : "cursor-pointer";
 
@@ -18,7 +15,7 @@ const Button = ({
         onClick={onClick}
         className={`${className} ${opacity} ${cursor}`}
       >
-        {loading ? "Loading..." : label}
+        {status?.loading ? "Loading..." : label}
       </button>
     </div>
   );

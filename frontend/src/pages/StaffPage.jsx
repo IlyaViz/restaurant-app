@@ -9,7 +9,11 @@ const StaffPage = () => {
 
   return (
     <>
-      {role === "kitchen_staff" && <KitchenOrders />}
+      {role === "kitchen_staff" && (
+        <div className="flex flex-col gap-8">
+          <KitchenOrders />
+        </div>
+      )}
 
       {["manager", "owner"].includes(role) && (
         <SectionSwitcher sections={sections} />

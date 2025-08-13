@@ -8,7 +8,9 @@ import {
   finishCustomerOrderThunk,
 } from "./kitchenThunk";
 import { FETCH_ORDERS_INTERVAL } from "../../constants/time";
-import { ORDER_STATUS } from "../../constants/order";
+import getOrderProductStatusOptions from "../../utils/getOrderProductStatusOptions";
+import ORDER_STATUS from "../../enums/order";
+import CONTROL_TYPE from "../../enums/controlType";
 import isOrderDeletable from "../../utils/isOrderDeletable";
 import OrderDisplay from "../../components/OrderDisplay";
 
@@ -18,6 +20,7 @@ const KitchenOrders = () => {
     customerOrderProducts,
     deleteCustomerOrderStatus,
     finishCustomerOrderStatus,
+    updateCustomerOrderProductStatus,
   } = useSelector((state) => state.kitchen);
 
   const dispatch = useDispatch();
@@ -46,11 +49,12 @@ const KitchenOrders = () => {
     );
   };
 
-  const getOrderActions = (customerOrder) => {
-    const actions = [];
+  const getCustomerOrderControls = (customerOrder) => {
+    const controls = [];
 
     if (isCustomerOrderDeletable(customerOrder)) {
-      actions.push({
+      controls.push({
+        type: CONTROL_TYPE.BUTTON,
         label: "Delete Order",
         onClick: () => dispatch(deleteCustomerOrderThunk(customerOrder.id)),
         buttonClassName: "btn-danger",
@@ -59,7 +63,8 @@ const KitchenOrders = () => {
     }
 
     if (isCustomerOrderFinishable(customerOrder)) {
-      actions.push({
+      controls.push({
+        type: CONTROL_TYPE.BUTTON,
         label: "Finish Order",
         onClick: () => dispatch(finishCustomerOrderThunk(customerOrder.id)),
         buttonClassName: "btn-success",
@@ -67,7 +72,26 @@ const KitchenOrders = () => {
       });
     }
 
-    return actions;
+    return controls;
+  };
+
+  const getCustomerOrderProductControls = (customerOrderProduct) => {
+    return [
+      {
+        type: CONTROL_TYPE.SELECT,
+        label: "Change Status",
+        options: getOrderProductStatusOptions(customerOrderProduct, true),
+        selected: customerOrderProduct.status,
+        status: updateCustomerOrderProductStatus,
+        onChange: (e) =>
+          dispatch(
+            updateCustomerOrderProductStatusThunk({
+              orderProductId: customerOrderProduct.id,
+              status: e.target.value,
+            })
+          ),
+      },
+    ];
   };
 
   useEffect(() => {
@@ -89,23 +113,13 @@ const KitchenOrders = () => {
   return (
     <>
       {customerOrders.map((customerOrder) => (
-        <div key={customerOrder.id}>
-          <OrderDisplay
-            order={customerOrder}
-            orderProducts={getCustomerOrderProducts(customerOrder)}
-            orderActions={getOrderActions(customerOrder)}
-            allowedOrderProductStatuses={Object.values(ORDER_STATUS)}
-            onOrderProductStatusChange={(orderProductId, status) => {
-              dispatch(
-                updateCustomerOrderProductStatusThunk({
-                  orderProductId,
-                  status,
-                })
-              );
-            }}
-            isOrderProductRemovable={() => false}
-          />
-        </div>
+        <OrderDisplay
+          key={customerOrder.id}
+          order={customerOrder}
+          orderProducts={getCustomerOrderProducts(customerOrder)}
+          orderControls={getCustomerOrderControls(customerOrder)}
+          getOrderProductControls={getCustomerOrderProductControls}
+        />
       ))}
     </>
   );

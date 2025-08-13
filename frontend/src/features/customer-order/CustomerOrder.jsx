@@ -12,33 +12,68 @@ import {
   FETCH_ORDER_INTERVAL,
   FETCH_ORDER_PRODUCTS_INTERVAL,
 } from "../../constants/time";
+import CONTROL_TYPE from "../../enums/controlType";
+import getOrderProductStatusOptions from "../../utils/getOrderProductStatusOptions";
+import isOrderDeletable from "../../utils/isOrderDeletable";
 import OrderDisplay from "../../components/OrderDisplay";
 import OrderCreator from "./OrderCreator";
-import isOrderDeletable from "../../utils/isOrderDeletable";
 
 const CustomerOrder = () => {
-  const { order, orderProducts, removeOrderProductStatus, deleteOrderStatus } =
-    useSelector((state) => state.customerOrder);
+  const {
+    order,
+    orderProducts,
+    removeOrderProductStatus,
+    deleteOrderStatus,
+    updateOrderProductStatus,
+  } = useSelector((state) => state.customerOrder);
 
   const dispatch = useDispatch();
+
+  const orderControls = isOrderDeletable(orderProducts)
+    ? [
+        {
+          type: CONTROL_TYPE.BUTTON,
+          label: "Delete Order",
+          onClick: () => dispatch(deleteOrderThunk(order.id)),
+          buttonClassName: "btn-danger",
+          status: deleteOrderStatus,
+        },
+      ]
+    : [];
 
   const isOrderProductRemovable = (orderProduct) => {
     return INACTIVE_ORDER_STATUSES.includes(orderProduct.status);
   };
 
-  const getOrderActions = () => {
-    const actions = [];
+  const getOrderProductControls = (orderProduct) => {
+    const controls = [];
 
-    if (isOrderDeletable(orderProducts)) {
-      actions.push({
-        label: "Delete Order",
-        onClick: (orderId) => dispatch(deleteOrderThunk(orderId)),
+    controls.push({
+      type: CONTROL_TYPE.SELECT,
+      label: "Change Status",
+      options: getOrderProductStatusOptions(orderProduct),
+      selected: orderProduct.status,
+      status: updateOrderProductStatus,
+      onChange: (e) =>
+        dispatch(
+          updateOrderProductStatusThunk({
+            orderProductId: orderProduct.id,
+            status: e.target.value,
+          })
+        ),
+    });
+
+    if (isOrderProductRemovable(orderProduct)) {
+      controls.push({
+        type: CONTROL_TYPE.BUTTON,
+        label: "Remove",
+        onClick: () => dispatch(removeOrderProductThunk(orderProduct.id)),
         buttonClassName: "btn-danger",
-        status: deleteOrderStatus,
+        status: removeOrderProductStatus,
       });
     }
 
-    return actions;
+    return controls;
   };
 
   useEffect(() => {
@@ -69,16 +104,8 @@ const CustomerOrder = () => {
         <OrderDisplay
           order={order}
           orderProducts={orderProducts}
-          orderActions={getOrderActions()}
-          allowedOrderProductStatuses={INACTIVE_ORDER_STATUSES}
-          onOrderProductStatusChange={(orderProductId, status) => {
-            dispatch(updateOrderProductStatusThunk({ orderProductId, status }));
-          }}
-          isOrderProductRemovable={isOrderProductRemovable}
-          onOrderProductRemoveClick={(orderProductId) =>
-            dispatch(removeOrderProductThunk(orderProductId))
-          }
-          removeOrderProductStatus={removeOrderProductStatus}
+          orderControls={orderControls}
+          getOrderProductControls={getOrderProductControls}
         />
       ) : (
         <OrderCreator />

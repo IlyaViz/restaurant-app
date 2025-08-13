@@ -1,10 +1,4 @@
-export const ORDER_STATUS = {
-  DRAFT: "draft",
-  PENDING: "pending",
-  IN_PROGRESS: "in_progress",
-  COMPLETED: "completed",
-  PAID: "paid",
-};
+import ORDER_STATUS from "../enums/order";
 
 export const ORDER_STATUS_LABELS = {
   [ORDER_STATUS.DRAFT]: "Draft",

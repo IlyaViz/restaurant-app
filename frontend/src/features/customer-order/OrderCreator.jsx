@@ -4,9 +4,9 @@ import {
   fetchRestaurantsThunk,
   fetchRestaurantTablesThunk,
 } from "../restaurant/restaurantThunk";
-import { showToast } from "../toast/toastSlice";
 import { createOrderThunk } from "./customerOrderThunk";
 import Button from "../../components/Button";
+import Select from "../../components/Select";
 
 const OrderCreator = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
@@ -18,6 +18,22 @@ const OrderCreator = () => {
   const { createOrderStatus } = useSelector((state) => state.customerOrder);
 
   const dispatch = useDispatch();
+
+  const restaurantOptions = [
+    { value: "", label: "Select Restaurant" },
+    ...restaurants.map((restaurant) => ({
+      value: restaurant.id,
+      label: restaurant.name,
+    })),
+  ];
+
+  const tableOptions = [
+    { value: "", label: "Select Table" },
+    ...restaurantTables.map((table) => ({
+      value: table.id,
+      label: table.number,
+    })),
+  ];
 
   const handleRestaurantChange = (e) => {
     setSelectedRestaurant(e.target.value);
@@ -35,46 +51,21 @@ const OrderCreator = () => {
     }
   }, [selectedRestaurant, dispatch]);
 
-  useEffect(() => {
-    if (createOrderStatus.error) {
-      dispatch(showToast({ message: createOrderStatus.error, type: "error" }));
-    }
-  }, [createOrderStatus.error, dispatch]);
-
   return (
     <div className="flex flex-col items-center">
-      <select
-        className="text-2xl text-center"
-        onChange={(e) => handleRestaurantChange(e)}
-      >
-        <option value="">Select Restaurant</option>
+      <Select options={restaurantOptions} onChange={handleRestaurantChange} />
 
-        {restaurants.map((restaurant) => (
-          <option key={restaurant.id} value={restaurant.id}>
-            {restaurant.name}
-          </option>
-        ))}
-      </select>
-
-      <select
-        className="text-2xl text-center"
+      <Select
+        options={tableOptions}
         onChange={(e) => setSelectedTable(e.target.value)}
-      >
-        <option value="">Select Table</option>
-
-        {restaurantTables.map((table) => (
-          <option key={table.id} value={table.id}>
-            {table.number}
-          </option>
-        ))}
-      </select>
+      />
 
       <Button
         active={!!selectedTable}
         label="Create Order"
         onClick={() => dispatch(createOrderThunk(selectedTable))}
         className="btn-primary"
-        loading={createOrderStatus.loading}
+        status={createOrderStatus}
       />
     </div>
   );
