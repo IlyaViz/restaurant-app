@@ -39,6 +39,7 @@ const kitchenSlice = createSlice({
     builder
       .addCase(fetchCustomerActiveOrdersThunk.pending, (state) => {
         state.fetchCustomerActiveOrdersStatus.loading = true;
+        state.fetchCustomerActiveOrdersStatus.error = null;
       })
       .addCase(fetchCustomerActiveOrdersThunk.fulfilled, (state, action) => {
         state.customerOrders = action.payload;
@@ -51,6 +52,7 @@ const kitchenSlice = createSlice({
 
       .addCase(fetchCustomerOrderProductsThunk.pending, (state) => {
         state.fetchCustomerOrderProductsStatus.loading = true;
+        state.fetchCustomerOrderProductsStatus.error = null;
       })
       .addCase(fetchCustomerOrderProductsThunk.fulfilled, (state, action) => {
         const orderId = action.meta.arg;
@@ -70,6 +72,7 @@ const kitchenSlice = createSlice({
 
       .addCase(updateCustomerOrderProductStatusThunk.pending, (state) => {
         state.updateCustomerOrderProductStatus.loading = true;
+        state.updateCustomerOrderProductStatus.error = null;
       })
       .addCase(
         updateCustomerOrderProductStatusThunk.fulfilled,
@@ -97,6 +100,7 @@ const kitchenSlice = createSlice({
 
       .addCase(deleteCustomerOrderThunk.pending, (state) => {
         state.deleteCustomerOrderStatus.loading = true;
+        state.deleteCustomerOrderStatus.error = null;
       })
       .addCase(deleteCustomerOrderThunk.fulfilled, (state, action) => {
         state.customerOrders = state.customerOrders.filter(
@@ -111,6 +115,7 @@ const kitchenSlice = createSlice({
 
       .addCase(finishCustomerOrderThunk.pending, (state) => {
         state.finishCustomerOrderStatus.loading = true;
+        state.finishCustomerOrderStatus.error = null;
       })
       .addCase(finishCustomerOrderThunk.fulfilled, (state, action) => {
         state.customerOrders = state.customerOrders.filter(

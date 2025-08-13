@@ -16,6 +16,7 @@ const menuSlice = createSlice({
     builder
       .addCase(fetchMenuItemsThunk.pending, (state) => {
         state.fetchMenuItemsStatus.loading = true;
+        state.fetchMenuItemsStatus.error = null;
       })
       .addCase(fetchMenuItemsThunk.fulfilled, (state, action) => {
         state.menuItems = action.payload;
