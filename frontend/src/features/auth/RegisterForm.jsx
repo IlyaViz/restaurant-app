@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerThunk } from "./authThunk";
-import AuthForm from "./AuthForm";
+import Form from "../../components/Form";
 
 const RegisterForm = () => {
   const registerStatus = useSelector((state) => state.auth.registerStatus);
@@ -28,7 +28,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <AuthForm
+    <Form
       fields={fields}
       onFormSubmit={onFormSubmit}
       submitLabel="Register"

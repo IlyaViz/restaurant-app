@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { loginThunk } from "./authThunk";
-import AuthForm from "./AuthForm";
+import Form from "../../components/Form";
 
 const LoginForm = () => {
   const loginStatus = useSelector((state) => state.auth.loginStatus);
@@ -27,7 +27,7 @@ const LoginForm = () => {
   };
 
   return (
-    <AuthForm
+    <Form
       fields={fields}
       onFormSubmit={onFormSubmit}
       submitLabel="Login"
