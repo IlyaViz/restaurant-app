@@ -13,7 +13,7 @@ export const updateProduct = async ({ productId, productFormData }, token) => {
   return await fetchDefault(
     `${BACKEND_API_URL}/menu-management/product/${productId}/`,
     {
-      method: "PUT",
+      method: "PATCH",
       headers: getAuthHeader(token),
       body: productFormData,
     }
