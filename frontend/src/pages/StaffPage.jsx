@@ -1,11 +1,19 @@
 import { useSelector } from "react-redux";
 import KitchenOrders from "../features/kitchen/KitchenOrders";
 import SectionSwitcher from "../components/TabSwitcher";
+import MenuManagement from "../features/menu-management/MenuManagement";
 
 const StaffPage = () => {
   const { role } = useSelector((state) => state.auth);
 
-  const sections = [{ title: "Kitchen Orders", component: <KitchenOrders /> }];
+  let sections = [];
+
+  if (["manager", "owner"].includes(role)) {
+    sections.push(
+      { title: "Kitchen Orders", component: <KitchenOrders /> },
+      { title: "Menu Management", component: <MenuManagement /> }
+    );
+  }
 
   return (
     <>

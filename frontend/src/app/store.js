@@ -3,19 +3,21 @@ import { persistStore } from "redux-persist";
 import { combineReducers } from "redux";
 import { persistedAuthReducer } from "./persistedReducers";
 import { logout } from "../features/auth/authSlice";
-import menuReducer from "../features/menu/menuSlice";
+import customerMenuReducer from "../features/customer-menu/customerMenuSlice";
 import customerOrderReducer from "../features/customer-order/customerOrderSlice";
 import restaurantReducer from "../features/restaurant/restaurantSlice";
 import toastReducer from "../features/toast/toastSlice";
 import kitchenReducer from "../features/kitchen/kitchenSlice";
+import menuManagementReducer from "../features/menu-management/menuManagementSlice";
 
 const appReducer = combineReducers({
   auth: persistedAuthReducer,
-  menu: menuReducer,
+  customerMenu: customerMenuReducer,
   customerOrder: customerOrderReducer,
   kitchen: kitchenReducer,
   toast: toastReducer,
   restaurant: restaurantReducer,
+  menuManagement: menuManagementReducer,
 });
 
 const rootReducer = (state, action) => {

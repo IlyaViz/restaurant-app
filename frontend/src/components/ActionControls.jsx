@@ -28,7 +28,11 @@ const ActionControls = ({ controls }) => {
     }
   };
 
-  return <>{controls && controls.map((control) => renderControl(control))}</>;
+  return (
+    <div className="flex flex-col gap-1">
+      {controls && controls.map((control) => renderControl(control))}
+    </div>
+  );
 };
 
 export default ActionControls;

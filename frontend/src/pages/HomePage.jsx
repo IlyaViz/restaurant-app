@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import MenuList from "../features/menu/MenuList";
+import CustomerMenuList from "../features/customer-menu/CustomerMenuList";
 import CustomerOrder from "../features/customer-order/CustomerOrder";
 
 const HomePage = () => {
@@ -10,7 +10,7 @@ const HomePage = () => {
       {token ? <CustomerOrder /> : <div>Login to create order</div>}
 
       <div className="flex flex-col items-center gap-8">
-        <MenuList />
+        <CustomerMenuList />
       </div>
     </div>
   );

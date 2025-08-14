@@ -1,5 +1,5 @@
 import { BACKEND_API_URL } from "../constants/settings";
-import getAuthHeaders from "../utils/getAuthHeaders";
+import { getAuthHeaders } from "../utils/getHeaders";
 import fetchDefault from "../utils/fetchDefault";
 
 export const fetchRestaurants = () => {

@@ -35,7 +35,7 @@ const OrderCreator = () => {
     })),
   ];
 
-  const handleRestaurantChange = (e) => {
+  const onRestaurantChange = (e) => {
     setSelectedRestaurant(e.target.value);
 
     setSelectedTable(null);
@@ -53,7 +53,7 @@ const OrderCreator = () => {
 
   return (
     <div className="flex flex-col items-center">
-      <Select options={restaurantOptions} onChange={handleRestaurantChange} />
+      <Select options={restaurantOptions} onChange={onRestaurantChange} />
 
       <Select
         options={tableOptions}

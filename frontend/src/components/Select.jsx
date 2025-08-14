@@ -1,10 +1,12 @@
 import useStatusesToast from "../hooks/useStatusesToast";
 
-const Select = ({ options, selected, onChange, status }) => {
+const Select = ({ name, required, options, selected, onChange, status }) => {
   useStatusesToast([status]);
 
   return (
     <select
+      name={name}
+      required={required}
       value={selected}
       onChange={onChange}
       className="text-center text-2xl"
