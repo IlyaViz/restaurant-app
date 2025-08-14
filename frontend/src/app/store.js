@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistStore } from "redux-persist";
 import { combineReducers } from "redux";
 import { persistedAuthReducer } from "./persistedReducers";
+import { logout } from "../features/auth/authSlice";
 import menuReducer from "../features/menu/menuSlice";
 import customerOrderReducer from "../features/customer-order/customerOrderSlice";
 import restaurantReducer from "../features/restaurant/restaurantSlice";
@@ -18,11 +19,10 @@ const appReducer = combineReducers({
 });
 
 const rootReducer = (state, action) => {
-  if (action.type === "auth/logout") {
+  if (action.type === logout.type) {
     state = {
       ...state,
-      auth: undefined,
-      order: undefined,
+      customerOrder: undefined,
     };
   }
 
