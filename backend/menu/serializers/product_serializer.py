@@ -12,5 +12,4 @@ class ProductSerializer(ModelSerializer):
             "price",
             "image",
             "category",
-            "is_active",
         ]
