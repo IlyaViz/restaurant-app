@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "order",
     "restaurant",
     "corsheaders",
+    "django_filters",
     "rest_framework",
     "rest_framework.authtoken",
     "django.contrib.admin",
