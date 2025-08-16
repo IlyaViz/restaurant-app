@@ -15,10 +15,6 @@ const initialState = {
     loading: false,
     error: null,
   },
-  fetchUsersStatus: {
-    loading: false,
-    error: null,
-  },
   searchUserByPartialUsername: {
     loading: false,
     error: null,

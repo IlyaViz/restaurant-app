@@ -55,7 +55,7 @@ const UserManagement = () => {
     getLowerRoles(role).forEach((lowerRole) => {
       dispatch(fetchUsersThunk(lowerRole));
     });
-  }, [dispatch]);
+  }, [dispatch, role]);
 
   return (
     <>
