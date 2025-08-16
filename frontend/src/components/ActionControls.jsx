@@ -6,25 +6,9 @@ const ActionControls = ({ controls }) => {
   const renderControl = (control) => {
     switch (control.type) {
       case CONTROL_TYPE.BUTTON:
-        return (
-          <Button
-            key={control.label}
-            label={control.label}
-            onClick={control.onClick}
-            className={control.buttonClassName}
-            status={control.status}
-          />
-        );
+        return <Button key={control.label} {...control} />;
       case CONTROL_TYPE.SELECT:
-        return (
-          <Select
-            key={control.label}
-            options={control.options}
-            selected={control.selected}
-            onChange={(e) => control.onChange(e)}
-            status={control.status}
-          />
-        );
+        return <Select key={control.label} {...control} />;
     }
   };
 

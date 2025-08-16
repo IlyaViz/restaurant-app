@@ -21,7 +21,7 @@ const CustomerMenuList = () => {
           {
             type: CONTROL_TYPE.BUTTON,
             label: "Add to Order",
-            buttonClassName: "btn-primary",
+            className: "btn-primary",
             onClick: () =>
               dispatch(
                 addOrderProductThunk({

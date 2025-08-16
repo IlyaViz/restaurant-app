@@ -35,7 +35,7 @@ const CustomerOrder = () => {
           type: CONTROL_TYPE.BUTTON,
           label: "Delete Order",
           onClick: () => dispatch(deleteOrderThunk(order.id)),
-          buttonClassName: "btn-danger",
+          className: "btn-danger",
           status: deleteOrderStatus,
         },
       ]
@@ -68,7 +68,7 @@ const CustomerOrder = () => {
         type: CONTROL_TYPE.BUTTON,
         label: "Remove",
         onClick: () => dispatch(removeOrderProductThunk(orderProduct.id)),
-        buttonClassName: "btn-danger",
+        className: "btn-danger",
         status: removeOrderProductStatus,
       });
     }

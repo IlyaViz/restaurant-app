@@ -13,7 +13,7 @@ const Form = ({
   const getFormData = () => {
     const formData = {};
 
-    fields.reduce((acc, field) => {
+    fields?.reduce((acc, field) => {
       if (field.type === "file") {
         acc[field.name] = { value: "", file: null };
       } else {
@@ -23,7 +23,7 @@ const Form = ({
       return acc;
     }, formData);
 
-    selectors.reduce((acc, selector) => {
+    selectors?.reduce((acc, selector) => {
       acc[selector.name] = selector.selected || "";
 
       return acc;
@@ -34,7 +34,7 @@ const Form = ({
 
   const [formData, setFormData] = useState(getFormData());
 
-  const getFormDataValue = (field) => {
+  const getFormDataFieldValue = (field) => {
     if (field.type === "file") {
       return formData[field.name].value;
     }
@@ -61,28 +61,32 @@ const Form = ({
   const onSubmit = (e) => {
     e.preventDefault();
 
-    const data = new FormData();
+    if (fields?.some((field) => field.type === "file")) {
+      const data = new FormData();
 
-    fields.forEach((field) => {
-      if (field.type === "file") {
-        if (formData[field.name].file) {
-          data.append(field.name, formData[field.name].file);
+      fields.forEach((field) => {
+        if (field.type === "file") {
+          if (formData[field.name].file) {
+            data.append(field.name, formData[field.name].file);
+          }
+        } else {
+          data.append(field.name, formData[field.name]);
         }
-      } else {
-        data.append(field.name, formData[field.name]);
-      }
-    });
+      });
 
-    selectors.forEach((selector) => {
-      data.append(selector.name, formData[selector.name]);
-    });
+      selectors?.forEach((selector) => {
+        data.append(selector.name, formData[selector.name]);
+      });
 
-    onFormSubmit(data);
+      onFormSubmit(data);
+    } else {
+      onFormSubmit(formData);
+    }
   };
 
   useEffect(() => {
     setFormData(getFormData());
-  }, [fields]);
+  }, [fields, selectors]);
 
   return (
     <form
@@ -94,11 +98,8 @@ const Form = ({
           fields.map((field, index) => (
             <Input
               key={index}
-              name={field.name}
-              value={getFormDataValue(field)}
-              type={field.type}
-              label={field.label}
-              required={field.required}
+              {...field}
+              value={getFormDataFieldValue(field)}
               onChange={(e) => onFieldChange(e, field)}
             />
           ))}
@@ -107,9 +108,8 @@ const Form = ({
           selectors.map((selector, index) => (
             <Select
               key={index}
-              name={selector.name}
-              options={selector.options}
-              selected={selector.selected}
+              {...selector}
+              selected={formData[selector.name]}
               onChange={(e) =>
                 setFormData({ ...formData, [e.target.name]: e.target.value })
               }
