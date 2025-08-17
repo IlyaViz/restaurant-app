@@ -16,9 +16,9 @@ const LoginForm = () => {
     { name: "password", label: "Password", type: "password", required: true },
   ];
 
-  const onFormSubmit = async (formData) => {
+  const onFormSubmit = async (data) => {
     try {
-      await dispatch(loginThunk(formData)).unwrap();
+      await dispatch(loginThunk(data)).unwrap();
 
       navigate("/");
     } catch (error) {

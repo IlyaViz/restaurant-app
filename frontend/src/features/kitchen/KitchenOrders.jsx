@@ -57,7 +57,7 @@ const KitchenOrders = () => {
         type: CONTROL_TYPE.BUTTON,
         label: "Delete Order",
         onClick: () => dispatch(deleteCustomerOrderThunk(customerOrder.id)),
-        buttonClassName: "btn-danger",
+        className: "btn-danger",
         status: deleteCustomerOrderStatus,
       });
     }
@@ -67,7 +67,7 @@ const KitchenOrders = () => {
         type: CONTROL_TYPE.BUTTON,
         label: "Finish Order",
         onClick: () => dispatch(finishCustomerOrderThunk(customerOrder.id)),
-        buttonClassName: "btn-success",
+        className: "btn-success",
         status: finishCustomerOrderStatus,
       });
     }

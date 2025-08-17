@@ -3,9 +3,9 @@ import { login, register } from "../../api/authApi";
 
 export const loginThunk = createAsyncThunk(
   "auth/login",
-  async ({ username, password }, { rejectWithValue }) => {
+  async (loginData, { rejectWithValue }) => {
     try {
-      return await login({ username, password });
+      return await login(loginData);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -14,9 +14,9 @@ export const loginThunk = createAsyncThunk(
 
 export const registerThunk = createAsyncThunk(
   "auth/register",
-  async ({ username, email, password }, { rejectWithValue }) => {
+  async (registerData, { rejectWithValue }) => {
     try {
-      return await register({ username, email, password });
+      return await register(registerData);
     } catch (error) {
       return rejectWithValue(error.message);
     }

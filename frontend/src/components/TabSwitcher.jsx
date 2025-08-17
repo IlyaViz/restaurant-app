@@ -6,7 +6,7 @@ const SectionSwitcher = ({ sections }) => {
 
   return (
     <div className="flex flex-col items-center text-center">
-      <div className="flex">
+      <div className="flex flex-col">
         {sections.map((section, index) => (
           <Button
             key={index}

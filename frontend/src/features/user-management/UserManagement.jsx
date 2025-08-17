@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   fetchUsersThunk,
   updateUserRoleThunk,
+  createUserProfileThunk,
+  updateUserProfileThunk,
   searchUserByPartialUsernameThunk,
+  fetchRestaurantsThunk,
 } from "./userManagementThunk";
 import { USER_ROLE_LABEL } from "../../constants/userRole";
 import getLowerRoles from "../../utils/getLowerRoles";
@@ -15,8 +18,14 @@ import Input from "../../components/Input";
 
 const UserManagement = () => {
   const { role } = useSelector((state) => state.auth);
-  const { users, searchUserByPartialUsername, updateUserRoleStatus } =
-    useSelector((state) => state.userManagement);
+  const {
+    users,
+    restaurants,
+    searchUserByPartialUsernameStatus,
+    updateUserRoleStatus,
+    createUserProfileStatus,
+    updateUserProfileStatus,
+  } = useSelector((state) => state.userManagement);
 
   const dispatch = useDispatch();
 
@@ -34,7 +43,7 @@ const UserManagement = () => {
   };
 
   const getUserControls = (user) => {
-    return [
+    const generalControls = [
       {
         type: CONTROL_TYPE.SELECT,
         label: "Role",
@@ -44,11 +53,49 @@ const UserManagement = () => {
         })),
         selected: user.role,
         onChange: (e) => {
-          dispatch(updateUserRoleThunk({ user, newRole: e.target.value }));
+          dispatch(updateUserRoleThunk({ user, role: e.target.value }));
         },
         status: updateUserRoleStatus,
       },
     ];
+
+    if (user.role === USER_ROLE.KITCHEN_STAFF) {
+      const onChange = (e) => {
+        if (user.profileInfo) {
+          dispatch(
+            updateUserProfileThunk({
+              user,
+              profileData: { restaurant: e.target.value },
+            })
+          );
+        } else {
+          dispatch(
+            createUserProfileThunk({
+              user,
+              profileData: { restaurant: e.target.value, user: user.id },
+            })
+          );
+        }
+      };
+
+      generalControls.push({
+        type: CONTROL_TYPE.SELECT,
+        label: "Restaurant",
+        options: [{ value: "", label: "Select Restaurant" }].concat(
+          restaurants.map((restaurant) => ({
+            value: restaurant.id,
+            label: restaurant.name,
+          }))
+        ),
+        selected: user?.profileInfo?.restaurant || "",
+        onChange,
+        status: user?.profileInfo
+          ? updateUserProfileStatus
+          : createUserProfileStatus,
+      });
+    }
+
+    return generalControls;
   };
 
   useEffect(() => {
@@ -56,6 +103,10 @@ const UserManagement = () => {
       dispatch(fetchUsersThunk(lowerRole));
     });
   }, [dispatch, role]);
+
+  useEffect(() => {
+    dispatch(fetchRestaurantsThunk());
+  }, [dispatch]);
 
   return (
     <>
@@ -69,17 +120,15 @@ const UserManagement = () => {
             name="username"
             label="Search customer"
             onChange={debouncedSearch}
+            status={searchUserByPartialUsernameStatus}
           />
 
-          {searchUserByPartialUsername.loading && <div>Loading...</div>}
+          {searchUserByPartialUsernameStatus.loading && <div>Loading...</div>}
 
-          {searchUserByPartialUsername.error && (
-            <div>Error: {searchUserByPartialUsername.error}</div>
-          )}
-
-          {getUsersByRole(USER_ROLE.CUSTOMER).length === 0 && (
-            <div>Try searching for a different customer</div>
-          )}
+          {!searchUserByPartialUsernameStatus.loading &&
+            getUsersByRole(USER_ROLE.CUSTOMER).length === 0 && (
+              <div>Try searching for a different customer</div>
+            )}
 
           <UserList
             users={getUsersByRole(USER_ROLE.CUSTOMER)}

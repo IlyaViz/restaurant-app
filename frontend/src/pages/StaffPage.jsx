@@ -4,6 +4,7 @@ import KitchenOrders from "../features/kitchen/KitchenOrders";
 import SectionSwitcher from "../components/TabSwitcher";
 import MenuManagement from "../features/menu-management/MenuManagement";
 import UserManagement from "../features/user-management/UserManagement";
+import RestaurantManagement from "../features/restaurant-management/RestaurantManagement";
 
 const StaffPage = () => {
   const { role } = useSelector((state) => state.auth);
@@ -16,6 +17,13 @@ const StaffPage = () => {
       { title: "Menu Management", component: <MenuManagement /> },
       { title: "User Management", component: <UserManagement /> }
     );
+  }
+
+  if (role === USER_ROLE.OWNER) {
+    sections.push({
+      title: "Restaurant Management",
+      component: <RestaurantManagement />,
+    });
   }
 
   return (

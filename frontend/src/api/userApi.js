@@ -12,13 +12,13 @@ export const fetchUsers = async (userRole, token) => {
   );
 };
 
-export const updateUserRole = async ({ user, newRole }, token) => {
+export const updateUserRole = async ({ user, role }, token) => {
   return await fetchDefault(
     `${BACKEND_API_URL}/account-management/${user.role}/${user.id}/`,
     {
       method: "PATCH",
       headers: getAuthHeaders(token),
-      body: JSON.stringify({ role: newRole }),
+      body: JSON.stringify({ role }),
     }
   );
 };
@@ -31,6 +31,28 @@ export const searchUserByPartialUsername = async (
     `${BACKEND_API_URL}/account-management/${role}?username__icontains=${partialUsername}&limit=${CUSTOMER_LIMIT}`,
     {
       headers: getAuthHeaders(token),
+    }
+  );
+};
+
+export const createUserProfile = async ({ user, profileData }, token) => {
+  return await fetchDefault(
+    `${BACKEND_API_URL}/account-management/${user.role}-work/`,
+    {
+      method: "POST",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify(profileData),
+    }
+  );
+};
+
+export const updateUserProfile = async ({ user, profileData }, token) => {
+  return await fetchDefault(
+    `${BACKEND_API_URL}/account-management/${user.role}-work/${user.profileInfo.id}/`,
+    {
+      method: "PATCH",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify(profileData),
     }
   );
 };

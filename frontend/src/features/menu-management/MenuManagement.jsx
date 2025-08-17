@@ -67,7 +67,6 @@ const MenuManagement = () => {
               }))
             ),
             selected: values.category || "",
-            required: true,
           },
         ]
       : [];
@@ -77,7 +76,7 @@ const MenuManagement = () => {
       {
         type: CONTROL_TYPE.BUTTON,
         label: "Edit",
-        buttonClassName: "btn-warning",
+        className: "btn-warning",
         onClick: () => {
           setValues(product);
           setIsEditing(true);
@@ -87,7 +86,7 @@ const MenuManagement = () => {
       {
         type: CONTROL_TYPE.BUTTON,
         label: "Delete",
-        buttonClassName: "btn-danger",
+        className: "btn-danger",
         onClick: () => dispatch(deleteProductThunk(product.id)),
         status: deleteProductStatus,
       },

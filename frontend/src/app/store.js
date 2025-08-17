@@ -10,6 +10,7 @@ import toastReducer from "../features/toast/toastSlice";
 import kitchenReducer from "../features/kitchen/kitchenSlice";
 import menuManagementReducer from "../features/menu-management/menuManagementSlice";
 import userManagementReducer from "../features/user-management/userManagementSlice";
+import restaurantManagementReducer from "../features/restaurant-management/restaurantManagementSlice";
 
 const appReducer = combineReducers({
   auth: persistedAuthReducer,
@@ -20,6 +21,7 @@ const appReducer = combineReducers({
   restaurant: restaurantReducer,
   menuManagement: menuManagementReducer,
   userManagement: userManagementReducer,
+  restaurantManagement: restaurantManagementReducer,
 });
 
 const rootReducer = (state, action) => {
