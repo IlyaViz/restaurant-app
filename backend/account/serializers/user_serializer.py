@@ -2,26 +2,26 @@ from rest_framework import serializers
 from rest_framework.serializers import ValidationError
 from django.contrib.auth import get_user_model
 from account.models import KitchenStaff
-from account.serializers.kitchen_staff_serializer import KitchenStaffExtraSerializer
+from account.serializers.kitchen_staff_serializer import KitchenStaffProfileSerializer
 
 
 User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    role_info = serializers.SerializerMethodField()
+    profile_info = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "password", "role", "role_info"]
+        fields = ["id", "username", "email", "password", "role", "profile_info"]
         extra_kwargs = {"password": {"write_only": True}}
 
-    def get_role_info(self, obj):
+    def get_profile_info(self, obj):
         if obj.role == User.Role.KITCHEN_STAFF:
             kitchen_staff = KitchenStaff.objects.filter(user=obj).first()
 
             if kitchen_staff:
-                return KitchenStaffExtraSerializer(kitchen_staff).data
+                return KitchenStaffProfileSerializer(kitchen_staff).data
 
         return None
 

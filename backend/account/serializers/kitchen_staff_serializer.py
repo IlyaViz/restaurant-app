@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer
 from account.models import KitchenStaff
 
 
-class KitchenStaffExtraSerializer(ModelSerializer):
+class KitchenStaffProfileSerializer(ModelSerializer):
     class Meta:
         model = KitchenStaff
-        fields = ["restaurant"]
+        fields = ["id", "user", "restaurant"]
