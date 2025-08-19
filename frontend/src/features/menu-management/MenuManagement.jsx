@@ -67,7 +67,7 @@ const MenuManagement = () => {
       inputType: "file",
       label: "Product Image",
     },
-    categories.length > 0 && {
+    {
       type: FIELD_TYPE.SELECT,
       name: "category",
       options: [{ value: "", label: "Select Category" }].concat(
