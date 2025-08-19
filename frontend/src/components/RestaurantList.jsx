@@ -11,7 +11,7 @@ const RestaurantList = ({
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-8">
       {restaurants.map((restaurant) => (
         <div
           key={restaurant.id}
@@ -19,7 +19,9 @@ const RestaurantList = ({
         >
           <h1 className="text-2xl font-bold">{restaurant.name}</h1>
 
-          <ActionControls controls={getRestaurantControls(restaurant)} />
+          {getRestaurantControls && (
+            <ActionControls controls={getRestaurantControls(restaurant)} />
+          )}
 
           <hr />
 

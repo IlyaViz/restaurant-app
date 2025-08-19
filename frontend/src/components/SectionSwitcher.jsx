@@ -2,7 +2,7 @@ import { useState } from "react";
 import Button from "./Button";
 
 const SectionSwitcher = ({ sections }) => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeSection, setActiveSection] = useState(0);
 
   return (
     <div className="flex flex-col items-center text-center">
@@ -11,16 +11,19 @@ const SectionSwitcher = ({ sections }) => {
           <Button
             key={index}
             label={section.title}
-            onClick={() => setActiveTab(index)}
+            onClick={() => setActiveSection(index)}
             className="btn-primary"
-            active={!(activeTab === index)}
+            active={!(activeSection === index)}
           />
         ))}
       </div>
 
       <div>
-        <h1 className="text-2xl font-bold mt-8">{sections[activeTab].title}</h1>
-        {sections[activeTab].component}
+        <h1 className="text-2xl font-bold mt-8">
+          {sections[activeSection].title}
+        </h1>
+
+        {sections[activeSection].component}
       </div>
     </div>
   );

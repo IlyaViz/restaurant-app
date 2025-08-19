@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductsThunk } from "./customerMenuThunk";
+import { fetchProductsThunk, fetchCategoriesThunk } from "./customerMenuThunk";
 import { addOrderProductThunk } from "../customer-order/customerOrderThunk";
 import CONTROL_TYPE from "../../enums/controlType";
 import MenuList from "../../components/MenuList";
@@ -9,9 +9,8 @@ const CustomerMenuList = () => {
   const { order, addOrderProductStatus } = useSelector(
     (state) => state.customerOrder
   );
-  const { products, fetchProductsStatus } = useSelector(
-    (state) => state.customerMenu
-  );
+  const { products, categories, fetchProductsStatus, fetchCategoriesStatus } =
+    useSelector((state) => state.customerMenu);
 
   const dispatch = useDispatch();
 
@@ -37,17 +36,25 @@ const CustomerMenuList = () => {
 
   useEffect(() => {
     dispatch(fetchProductsThunk());
+
+    dispatch(fetchCategoriesThunk());
   }, [dispatch]);
 
   return (
     <>
-      {fetchProductsStatus.loading && <div>Loading products...</div>}
-
-      {fetchProductsStatus.error && (
-        <div>Error fetching products: {fetchProductsStatus.error}</div>
+      {(fetchProductsStatus.loading || fetchCategoriesStatus.loading) && (
+        <div>Loading products and categories...</div>
       )}
 
-      <MenuList products={products} getProductControls={getProductControls} />
+      {(fetchProductsStatus.error || fetchCategoriesStatus.error) && (
+        <p>Error loading products and categories</p>
+      )}
+
+      <MenuList
+        products={products}
+        categories={categories}
+        getProductControls={getProductControls}
+      />
     </>
   );
 };

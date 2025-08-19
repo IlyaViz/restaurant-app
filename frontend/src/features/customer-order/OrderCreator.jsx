@@ -1,73 +1,43 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchRestaurantsThunk,
-  fetchRestaurantTablesThunk,
-} from "../restaurant/restaurantThunk";
+import { fetchRestaurantsThunk, fetchTablesThunk } from "./customerOrderThunk";
 import { createOrderThunk } from "./customerOrderThunk";
-import Button from "../../components/Button";
-import Select from "../../components/Select";
+import CONTROL_TYPE from "../../enums/controlType";
+import RestaurantList from "../../components/RestaurantList";
 
 const OrderCreator = () => {
-  const [selectedRestaurant, setSelectedRestaurant] = useState(null);
-  const [selectedTable, setSelectedTable] = useState(null);
-
-  const { restaurants, restaurantTables } = useSelector(
-    (state) => state.restaurant
+  const { restaurants, tables, createOrderStatus } = useSelector(
+    (state) => state.customerOrder
   );
-  const { createOrderStatus } = useSelector((state) => state.customerOrder);
 
   const dispatch = useDispatch();
 
-  const restaurantOptions = [
-    { value: "", label: "Select Restaurant" },
-    ...restaurants.map((restaurant) => ({
-      value: restaurant.id,
-      label: restaurant.name,
-    })),
-  ];
-
-  const tableOptions = [
-    { value: "", label: "Select Table" },
-    ...restaurantTables.map((table) => ({
-      value: table.id,
-      label: table.number,
-    })),
-  ];
-
-  const onRestaurantChange = (e) => {
-    setSelectedRestaurant(e.target.value);
-
-    setSelectedTable(null);
+  const getTableControls = (table) => {
+    return [
+      {
+        type: CONTROL_TYPE.BUTTON,
+        label: "Create Order",
+        className: "btn-primary",
+        onClick: () => {
+          dispatch(createOrderThunk(table.id));
+        },
+        status: createOrderStatus,
+      },
+    ];
   };
 
   useEffect(() => {
     dispatch(fetchRestaurantsThunk());
+
+    dispatch(fetchTablesThunk());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (selectedRestaurant) {
-      dispatch(fetchRestaurantTablesThunk(selectedRestaurant));
-    }
-  }, [selectedRestaurant, dispatch]);
-
   return (
-    <div className="flex flex-col items-center">
-      <Select options={restaurantOptions} onChange={onRestaurantChange} />
-
-      <Select
-        options={tableOptions}
-        onChange={(e) => setSelectedTable(e.target.value)}
-      />
-
-      <Button
-        active={!!selectedTable}
-        label="Create Order"
-        onClick={() => dispatch(createOrderThunk(selectedTable))}
-        className="btn-primary"
-        status={createOrderStatus}
-      />
-    </div>
+    <RestaurantList
+      restaurants={restaurants}
+      tables={tables}
+      getTableControls={getTableControls}
+    />
   );
 };
 

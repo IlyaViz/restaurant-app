@@ -1,16 +1,61 @@
 import Product from "./Product";
 import ActionControls from "./ActionControls";
 
-const MenuList = ({ products, getProductControls }) => {
-  return (
-    <div className="grid grid-cols-3 gap-16">
-      {products.map((product) => (
-        <div key={product.id} className="flex flex-col gap-2">
-          <Product {...product} imageClassName="h-36" />
+const MenuList = ({
+  products,
+  categories,
+  getProductControls,
+  getCategoryControls,
+}) => {
+  const categoryProducts = (category) => {
+    return products.filter((product) => product.category === category.id);
+  };
 
-          <ActionControls controls={getProductControls(product)} />
+  return (
+    <div className="flex flex-col gap-8">
+      {categories.map(
+        (category) =>
+          categoryProducts(category).length > 0 && (
+            <div
+              key={category.id}
+              className="flex flex-col gap-4 bg-blue-100 rounded-2xl p-4"
+            >
+              <h1 className="text-2xl font-bold mb-4">{category.name}</h1>
+
+              {getCategoryControls && (
+                <ActionControls controls={getCategoryControls(category)} />
+              )}
+
+              <div className="grid grid-cols-4 gap-4">
+                {categoryProducts(category).map((product) => (
+                  <div key={product.id} className="flex flex-col gap-2">
+                    <Product {...product} imageClassName="h-36" />
+
+                    <ActionControls controls={getProductControls(product)} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+      )}
+
+      {products.some((product) => !product.category) && (
+        <div className="flex flex-col gap-4 bg-blue-100 rounded-2xl p-4">
+          <h2 className="text-xl font-bold mb-4">Other</h2>
+
+          <div className="grid grid-cols-3 gap-8">
+            {products
+              .filter((product) => !product.category)
+              .map((product) => (
+                <div key={product.id} className="flex flex-col gap-2">
+                  <Product {...product} imageClassName="h-36" />
+
+                  <ActionControls controls={getProductControls(product)} />
+                </div>
+              ))}
+          </div>
         </div>
-      ))}
+      )}
     </div>
   );
 };

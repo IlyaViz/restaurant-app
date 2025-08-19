@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import Button from "./Button";
@@ -7,6 +7,14 @@ const Header = () => {
   const { username, token, role } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const onLogoutButtonClick = () => {
+    dispatch(logout());
+
+    navigate("/");
+  };
 
   return (
     <header className="mb-8 mt-4">
@@ -27,7 +35,7 @@ const Header = () => {
           <Button
             label="Logout"
             className="btn-primary"
-            onClick={() => dispatch(logout())}
+            onClick={onLogoutButtonClick}
           />
         ) : (
           <NavLink to="/register">

@@ -16,19 +16,6 @@ class OrderProductViewSet(ModelViewSet):
     queryset = OrderProduct.objects.all()
     serializer_class = OrderProductSerializer
 
-    def get_queryset(self):
-        if self.request.user.role == User.Role.KITCHEN_STAFF:
-            kitchen_staff = KitchenStaff.objects.filter(user=self.request.user).first()
-
-            if not kitchen_staff:
-                return OrderProduct.objects.none()
-
-            return OrderProduct.objects.filter(
-                order__table__restaurant=kitchen_staff.restaurant
-            )
-
-        return OrderProduct.objects.all()
-
     def get_permissions(self):
         if self.action == "list":
             return [IsAuthenticated(), CanListOrderProduct()]

@@ -9,6 +9,12 @@ export const fetchProducts = async () => {
   });
 };
 
+export const fetchCategories = async () => {
+  return await fetchDefault(`${BACKEND_API_URL}/menu-management/category/`, {
+    headers: HEADERS,
+  });
+};
+
 export const updateProduct = async ({ productId, productFormData }, token) => {
   return await fetchDefault(
     `${BACKEND_API_URL}/menu-management/product/${productId}/`,
@@ -16,6 +22,17 @@ export const updateProduct = async ({ productId, productFormData }, token) => {
       method: "PATCH",
       headers: getAuthHeader(token),
       body: productFormData,
+    }
+  );
+};
+
+export const updateCategory = async ({ categoryId, categoryData }, token) => {
+  return await fetchDefault(
+    `${BACKEND_API_URL}/menu-management/category/${categoryId}/`,
+    {
+      method: "PATCH",
+      headers: getAuthHeaders(token),
+      body: JSON.stringify(categoryData),
     }
   );
 };
@@ -32,6 +49,18 @@ export const deleteProduct = async (productId, token) => {
   return productId;
 };
 
+export const deleteCategory = async (categoryId, token) => {
+  await fetchDefault(
+    `${BACKEND_API_URL}/menu-management/category/${categoryId}/`,
+    {
+      method: "DELETE",
+      headers: getAuthHeaders(token),
+    }
+  );
+
+  return categoryId;
+};
+
 export const createProduct = async (productFormData, token) => {
   return await fetchDefault(`${BACKEND_API_URL}/menu-management/product/`, {
     method: "POST",
@@ -40,8 +69,10 @@ export const createProduct = async (productFormData, token) => {
   });
 };
 
-export const fetchCategories = async () => {
+export const createCategory = async (categoryData, token) => {
   return await fetchDefault(`${BACKEND_API_URL}/menu-management/category/`, {
-    headers: HEADERS,
+    method: "POST",
+    headers: getAuthHeaders(token),
+    body: JSON.stringify(categoryData),
   });
 };

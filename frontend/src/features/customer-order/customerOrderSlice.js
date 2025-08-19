@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchActiveOrderThunk,
+  fetchRestaurantsThunk,
+  fetchTablesThunk,
   updateOrderProductStatusThunk,
   deleteOrderThunk,
   createOrderThunk,
@@ -12,11 +14,21 @@ import {
 const initialState = {
   order: null,
   orderProducts: [],
+  restaurants: [],
+  tables: [],
   addOrderProductStatus: {
     loading: false,
     error: null,
   },
   fetchActiveOrderStatus: {
+    loading: false,
+    error: null,
+  },
+  fetchRestaurantsStatus: {
+    loading: false,
+    error: null,
+  },
+  fetchTablesStatus: {
     loading: false,
     error: null,
   },
@@ -72,6 +84,32 @@ const customerOrderSlice = createSlice({
         state.order = null;
         state.fetchActiveOrderStatus.loading = false;
         state.fetchActiveOrderStatus.error = action.payload;
+      })
+
+      .addCase(fetchRestaurantsThunk.pending, (state) => {
+        state.fetchRestaurantsStatus.loading = true;
+        state.fetchRestaurantsStatus.error = null;
+      })
+      .addCase(fetchRestaurantsThunk.fulfilled, (state, action) => {
+        state.restaurants = action.payload;
+        state.fetchRestaurantsStatus.loading = false;
+      })
+      .addCase(fetchRestaurantsThunk.rejected, (state, action) => {
+        state.fetchRestaurantsStatus.loading = false;
+        state.fetchRestaurantsStatus.error = action.payload;
+      })
+
+      .addCase(fetchTablesThunk.pending, (state) => {
+        state.fetchTablesStatus.loading = true;
+        state.fetchTablesStatus.error = null;
+      })
+      .addCase(fetchTablesThunk.fulfilled, (state, action) => {
+        state.tables = action.payload;
+        state.fetchTablesStatus.loading = false;
+      })
+      .addCase(fetchTablesThunk.rejected, (state, action) => {
+        state.fetchTablesStatus.loading = false;
+        state.fetchTablesStatus.error = action.payload;
       })
 
       .addCase(createOrderThunk.pending, (state) => {

@@ -202,6 +202,16 @@ const RestaurantManagement = () => {
     }
   };
 
+  const onCancelRestaurantButtonClick = () => {
+    setIsEditingRestaurant(false);
+    setRestaurantValues({});
+  };
+
+  const onCancelTableButtonClick = () => {
+    setIsEditingTable(false);
+    setTableValues({});
+  };
+
   useEffect(() => {
     dispatch(fetchRestaurantsThunk());
     dispatch(fetchTablesThunk());
@@ -219,15 +229,17 @@ const RestaurantManagement = () => {
                 ? `Update Restaurant (id ${restaurantValues.id})`
                 : "Create Restaurant"
             }
+            submitStatus={
+              isEditingRestaurant
+                ? updateRestaurantStatus
+                : createRestaurantStatus
+            }
           />
 
           {isEditingRestaurant && (
             <Button
               label="Cancel Editing"
-              onClick={() => {
-                setIsEditingRestaurant(false);
-                setRestaurantValues({});
-              }}
+              onClick={onCancelRestaurantButtonClick}
               className="btn-secondary"
             />
           )}
@@ -243,15 +255,15 @@ const RestaurantManagement = () => {
                 ? `Update Table (id ${tableValues.id})`
                 : "Create Table"
             }
+            submitStatus={
+              isEditingTable ? updateTableStatus : createTableStatus
+            }
           />
 
           {isEditingTable && (
             <Button
               label="Cancel Editing"
-              onClick={() => {
-                setIsEditingTable(false);
-                setTableValues({});
-              }}
+              onClick={onCancelTableButtonClick}
               className="btn-secondary"
             />
           )}
@@ -263,7 +275,7 @@ const RestaurantManagement = () => {
       )}
 
       {(fetchRestaurantsStatus.error || fetchTablesStatus.error) && (
-        <p>Error loading restaurants and tables.</p>
+        <p>Error loading restaurants and tables</p>
       )}
 
       <RestaurantList

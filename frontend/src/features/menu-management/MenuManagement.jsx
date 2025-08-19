@@ -2,10 +2,13 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchProductsThunk,
-  updateProductThunk,
-  deleteProductThunk,
-  createProductThunk,
   fetchCategoriesThunk,
+  updateProductThunk,
+  updateCategoryThunk,
+  deleteProductThunk,
+  deleteCategoryThunk,
+  createProductThunk,
+  createCategoryThunk,
 } from "./menuManagementThunk";
 import CONTROL_TYPE from "../../enums/controlType";
 import MenuList from "../../components/MenuList";
@@ -13,39 +16,45 @@ import Form from "../../components/Form";
 import Button from "../../components/Button";
 
 const MenuManagement = () => {
-  const [values, setValues] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
+  const [productValues, setProductValues] = useState({});
+  const [categoryValues, setCategoryValues] = useState({});
+  const [isEditingProduct, setIsEditingProduct] = useState(false);
+  const [isEditingCategory, setIsEditingCategory] = useState(false);
 
   const {
     products,
     categories,
     fetchProductsStatus,
+    fetchCategoriesStatus,
     updateProductStatus,
+    updateCategoryStatus,
     deleteProductStatus,
+    deleteCategoryStatus,
     createProductStatus,
+    createCategoryStatus,
   } = useSelector((state) => state.menuManagement);
 
   const dispatch = useDispatch();
 
-  const fields = [
+  const productFields = [
     {
       name: "name",
       type: "text",
-      value: values.name || "",
+      value: productValues.name || "",
       label: "Product Name",
       required: true,
     },
     {
       name: "price",
       type: "number",
-      value: values.price || "",
+      value: productValues.price || "",
       label: "Product Price",
       required: true,
     },
     {
       name: "description",
       type: "text",
-      value: values.description || "",
+      value: productValues.description || "",
       label: "Product Description",
     },
     {
@@ -55,7 +64,23 @@ const MenuManagement = () => {
     },
   ];
 
-  const selectors =
+  const categoryFields = [
+    {
+      name: "name",
+      type: "text",
+      value: categoryValues.name || "",
+      label: "Category Name",
+      required: true,
+    },
+    {
+      name: "description",
+      type: "text",
+      value: categoryValues.description || "",
+      label: "Category Description",
+    },
+  ];
+
+  const productSelectors =
     categories.length > 0
       ? [
           {
@@ -66,7 +91,7 @@ const MenuManagement = () => {
                 label: category.name,
               }))
             ),
-            selected: values.category || "",
+            selected: productValues.category || "",
           },
         ]
       : [];
@@ -78,8 +103,8 @@ const MenuManagement = () => {
         label: "Edit",
         className: "btn-warning",
         onClick: () => {
-          setValues(product);
-          setIsEditing(true);
+          setProductValues(product);
+          setIsEditingProduct(true);
         },
         status: updateProductStatus,
       },
@@ -93,62 +118,141 @@ const MenuManagement = () => {
     ];
   };
 
-  const onCancelButtonClick = () => {
-    setIsEditing(false);
-
-    setValues({});
+  const getCategoryControls = (category) => {
+    return [
+      {
+        type: CONTROL_TYPE.BUTTON,
+        label: "Edit",
+        className: "btn-warning",
+        onClick: () => {
+          setCategoryValues(category);
+          setIsEditingCategory(true);
+        },
+        status: updateCategoryStatus,
+      },
+      {
+        type: CONTROL_TYPE.BUTTON,
+        label: "Delete",
+        className: "btn-danger",
+        onClick: () => dispatch(deleteCategoryThunk(category.id)),
+        status: deleteCategoryStatus,
+      },
+    ];
   };
 
-  const onFormSubmit = async (formData) => {
-    if (isEditing) {
+  const onProductFormSubmit = async (formData) => {
+    if (isEditingProduct) {
       dispatch(
         updateProductThunk({
-          productId: values.id,
+          productId: productValues.id,
           productFormData: formData,
         })
       );
 
-      setIsEditing(false);
-      setValues({});
+      setIsEditingProduct(false);
+      setProductValues({});
     } else {
       dispatch(createProductThunk(formData));
     }
   };
 
+  const onCategoryFormSubmit = async (data) => {
+    if (isEditingCategory) {
+      dispatch(
+        updateCategoryThunk({
+          categoryId: categoryValues.id,
+          categoryData: data,
+        })
+      );
+
+      setIsEditingCategory(false);
+      setCategoryValues({});
+    } else {
+      dispatch(createCategoryThunk(data));
+    }
+  };
+
+  const onCancelProductButtonClick = () => {
+    setIsEditingProduct(false);
+    setProductValues({});
+  };
+
+  const onCancelCategoryButtonClick = () => {
+    setIsEditingCategory(false);
+    setCategoryValues({});
+  };
+
   useEffect(() => {
     dispatch(fetchProductsThunk());
+
     dispatch(fetchCategoriesThunk());
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col gap-16">
-      <div className="flex flex-col items-center">
-        <Form
-          fields={fields}
-          selectors={selectors}
-          onFormSubmit={onFormSubmit}
-          submitLabel={
-            isEditing ? `Update product (id ${values.id})` : "Create"
-          }
-          submitStatus={isEditing ? updateProductStatus : createProductStatus}
-        />
-
-        {isEditing && (
-          <Button
-            label="Cancel editing"
-            onClick={onCancelButtonClick}
-            className="btn-secondary"
+    <div className="flex flex-col gap-16 mt-8">
+      <div className="flex justify-center gap-16">
+        <div>
+          <Form
+            fields={productFields}
+            selectors={productSelectors}
+            onFormSubmit={onProductFormSubmit}
+            submitLabel={
+              isEditingProduct
+                ? `Update product (id ${productValues.id})`
+                : "Create"
+            }
+            submitStatus={
+              isEditingProduct ? updateProductStatus : createProductStatus
+            }
           />
-        )}
+
+          {isEditingProduct && (
+            <Button
+              label="Cancel editing"
+              onClick={onCancelProductButtonClick}
+              className="btn-secondary"
+            />
+          )}
+        </div>
+
+        <div>
+          <Form
+            fields={categoryFields}
+            onFormSubmit={onCategoryFormSubmit}
+            submitLabel={
+              isEditingCategory
+                ? `Update category (id ${categoryValues.id})`
+                : "Create"
+            }
+            submitStatus={
+              isEditingCategory ? updateCategoryStatus : createCategoryStatus
+            }
+          />
+
+          {isEditingCategory && (
+            <Button
+              label="Cancel editing"
+              onClick={onCancelCategoryButtonClick}
+              className="btn-secondary"
+            />
+          )}
+        </div>
       </div>
 
-      {fetchProductsStatus.loading && <div>Loading products...</div>}
-
-      {fetchProductsStatus.error && (
-        <div>Error fetching products: {fetchProductsStatus.error}</div>
+      {(fetchProductsStatus.loading || fetchCategoriesStatus.loading) && (
+        <div>Loading products and categories...</div>
       )}
 
-      <MenuList products={products} getProductControls={getProductControls} />
+      {(fetchProductsStatus.error || fetchCategoriesStatus.error) && (
+        <p>Error loading products and categories</p>
+      )}
+
+      <MenuList
+        products={products}
+        categories={categories}
+        getProductControls={getProductControls}
+        getCategoryControls={getCategoryControls}
+      />
     </div>
   );
 };

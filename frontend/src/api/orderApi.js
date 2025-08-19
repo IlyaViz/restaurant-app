@@ -75,11 +75,11 @@ export const fetchActiveOrder = async (token) => {
   );
 };
 
-export const createOrder = async (table, token) => {
+export const createOrder = async (tableId, token) => {
   return await fetchDefault(`${BACKEND_API_URL}/order-management/order/`, {
     method: "POST",
     headers: getAuthHeaders(token),
-    body: JSON.stringify({ table }),
+    body: JSON.stringify({ table: tableId }),
   });
 };
 

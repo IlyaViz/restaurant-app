@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchProductsThunk,
-  updateProductThunk,
-  deleteProductThunk,
-  createProductThunk,
   fetchCategoriesThunk,
+  updateProductThunk,
+  updateCategoryThunk,
+  deleteProductThunk,
+  deleteCategoryThunk,
+  createProductThunk,
+  createCategoryThunk,
 } from "./menuManagementThunk";
 
 const initialState = {
@@ -30,6 +33,18 @@ const initialState = {
     loading: false,
     error: null,
   },
+  createCategoryStatus: {
+    loading: false,
+    error: null,
+  },
+  updateCategoryStatus: {
+    loading: false,
+    error: null,
+  },
+  deleteCategoryStatus: {
+    loading: false,
+    error: null,
+  },
 };
 
 const menuManagementSlice = createSlice({
@@ -48,6 +63,19 @@ const menuManagementSlice = createSlice({
       .addCase(fetchProductsThunk.rejected, (state, action) => {
         state.fetchProductsStatus.loading = false;
         state.fetchProductsStatus.error = action.payload;
+      })
+
+      .addCase(fetchCategoriesThunk.pending, (state) => {
+        state.fetchCategoriesStatus.loading = true;
+        state.fetchCategoriesStatus.error = null;
+      })
+      .addCase(fetchCategoriesThunk.fulfilled, (state, action) => {
+        state.categories = action.payload;
+        state.fetchCategoriesStatus.loading = false;
+      })
+      .addCase(fetchCategoriesThunk.rejected, (state, action) => {
+        state.fetchCategoriesStatus.loading = false;
+        state.fetchCategoriesStatus.error = action.payload;
       })
 
       .addCase(updateProductThunk.pending, (state) => {
@@ -70,6 +98,26 @@ const menuManagementSlice = createSlice({
         state.updateProductStatus.error = action.payload;
       })
 
+      .addCase(updateCategoryThunk.pending, (state) => {
+        state.updateCategoryStatus.loading = true;
+        state.updateCategoryStatus.error = null;
+      })
+      .addCase(updateCategoryThunk.fulfilled, (state, action) => {
+        const index = state.categories.findIndex(
+          (category) => category.id === action.payload.id
+        );
+
+        if (index !== -1) {
+          state.categories[index] = action.payload;
+        }
+
+        state.updateCategoryStatus.loading = false;
+      })
+      .addCase(updateCategoryThunk.rejected, (state, action) => {
+        state.updateCategoryStatus.loading = false;
+        state.updateCategoryStatus.error = action.payload;
+      })
+
       .addCase(deleteProductThunk.pending, (state) => {
         state.deleteProductStatus.loading = true;
         state.deleteProductStatus.error = null;
@@ -86,6 +134,22 @@ const menuManagementSlice = createSlice({
         state.deleteProductStatus.error = action.payload;
       })
 
+      .addCase(deleteCategoryThunk.pending, (state) => {
+        state.deleteCategoryStatus.loading = true;
+        state.deleteCategoryStatus.error = null;
+      })
+      .addCase(deleteCategoryThunk.fulfilled, (state, action) => {
+        state.categories = state.categories.filter(
+          (category) => category.id !== action.payload
+        );
+
+        state.deleteCategoryStatus.loading = false;
+      })
+      .addCase(deleteCategoryThunk.rejected, (state, action) => {
+        state.deleteCategoryStatus.loading = false;
+        state.deleteCategoryStatus.error = action.payload;
+      })
+
       .addCase(createProductThunk.pending, (state) => {
         state.createProductStatus.loading = true;
         state.createProductStatus.error = null;
@@ -100,17 +164,18 @@ const menuManagementSlice = createSlice({
         state.createProductStatus.error = action.payload;
       })
 
-      .addCase(fetchCategoriesThunk.pending, (state) => {
-        state.fetchCategoriesStatus.loading = true;
-        state.fetchCategoriesStatus.error = null;
+      .addCase(createCategoryThunk.pending, (state) => {
+        state.createCategoryStatus.loading = true;
+        state.createCategoryStatus.error = null;
       })
-      .addCase(fetchCategoriesThunk.fulfilled, (state, action) => {
-        state.categories = action.payload;
-        state.fetchCategoriesStatus.loading = false;
+      .addCase(createCategoryThunk.fulfilled, (state, action) => {
+        state.categories.push(action.payload);
+
+        state.createCategoryStatus.loading = false;
       })
-      .addCase(fetchCategoriesThunk.rejected, (state, action) => {
-        state.fetchCategoriesStatus.loading = false;
-        state.fetchCategoriesStatus.error = action.payload;
+      .addCase(createCategoryThunk.rejected, (state, action) => {
+        state.createCategoryStatus.loading = false;
+        state.createCategoryStatus.error = action.payload;
       });
   },
 });

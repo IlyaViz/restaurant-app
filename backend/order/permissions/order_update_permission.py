@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from account.permissions.general_permission import IsManagerRole
+from account.permissions.general_permission import IsManagerRole, IsOwnerRole
 from order.permissions.general_permission import (
     IsOrderProductOwner,
     IsOrderOwner,
@@ -14,6 +14,7 @@ class CanUpdateOrderProduct(BasePermission):
             IsOrderProductOwner().has_object_permission(request, view, obj)
             or IsOrderProductKitchenStaff().has_object_permission(request, view, obj)
             or IsManagerRole().has_permission(request, view)
+            or IsOwnerRole().has_permission(request, view)
         )
 
 
@@ -23,4 +24,5 @@ class CanUpdateOrder(BasePermission):
             IsOrderOwner().has_object_permission(request, view, obj)
             or IsOrderKitchenStaff().has_object_permission(request, view, obj)
             or IsManagerRole().has_permission(request, view)
+            or IsOwnerRole().has_permission(request, view)
         )

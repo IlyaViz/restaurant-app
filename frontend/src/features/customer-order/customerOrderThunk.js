@@ -8,6 +8,7 @@ import {
   deleteOrder,
   fetchOrderProducts,
 } from "../../api/orderApi";
+import { fetchRestaurants, fetchTables } from "../../api/restaurantApi";
 
 export const addOrderProductThunk = createAsyncThunk(
   "customerOrder/addOrderProduct",
@@ -48,13 +49,35 @@ export const fetchActiveOrderThunk = createAsyncThunk(
   }
 );
 
+export const fetchRestaurantsThunk = createAsyncThunk(
+  "customerOrder/fetchRestaurants",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await fetchRestaurants();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchTablesThunk = createAsyncThunk(
+  "customerOrder/fetchTables",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await fetchTables();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const createOrderThunk = createAsyncThunk(
   "customerOrder/createOrder",
-  async (table, { rejectWithValue, getState }) => {
+  async (tableId, { rejectWithValue, getState }) => {
     try {
       const token = getState().auth.token;
 
-      return await createOrder(table, token);
+      return await createOrder(tableId, token);
     } catch (error) {
       return rejectWithValue(error.message);
     }

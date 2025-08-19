@@ -24,17 +24,6 @@ class OrderViewSet(ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
-    def get_queryset(self):
-        if self.request.user.role == User.Role.KITCHEN_STAFF:
-            kitchen_staff = KitchenStaff.objects.filter(user=self.request.user).first()
-
-            if not kitchen_staff:
-                return Order.objects.none()
-
-            return Order.objects.filter(table__restaurant=kitchen_staff.restaurant)
-
-        return Order.objects.all()
-
     def get_permissions(self):
         if self.action in ["list", "active_orders"]:
             return [IsAuthenticated(), CanListOrder()]
@@ -81,7 +70,15 @@ class OrderViewSet(ModelViewSet):
 
     @action(detail=False, methods=["get"], url_path="active-orders")
     def active_orders(self, request):
-        active_orders = self.get_queryset().filter(finished_at__isnull=True)
+        active_orders = self.queryset.filter(finished_at__isnull=True)
+
+        if request.user.role == User.Role.KITCHEN_STAFF:
+            kitchen_staff = KitchenStaff.objects.filter(user=request.user).first()
+
+            if kitchen_staff:
+                active_orders = active_orders.filter(
+                    table__restaurant=kitchen_staff.restaurant
+                )
 
         serializer = self.get_serializer(active_orders, many=True)
 

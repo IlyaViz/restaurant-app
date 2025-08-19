@@ -5,7 +5,6 @@ import { persistedAuthReducer } from "./persistedReducers";
 import { logout } from "../features/auth/authSlice";
 import customerMenuReducer from "../features/customer-menu/customerMenuSlice";
 import customerOrderReducer from "../features/customer-order/customerOrderSlice";
-import restaurantReducer from "../features/restaurant/restaurantSlice";
 import toastReducer from "../features/toast/toastSlice";
 import kitchenReducer from "../features/kitchen/kitchenSlice";
 import menuManagementReducer from "../features/menu-management/menuManagementSlice";
@@ -18,7 +17,6 @@ const appReducer = combineReducers({
   customerOrder: customerOrderReducer,
   kitchen: kitchenReducer,
   toast: toastReducer,
-  restaurant: restaurantReducer,
   menuManagement: menuManagementReducer,
   userManagement: userManagementReducer,
   restaurantManagement: restaurantManagementReducer,

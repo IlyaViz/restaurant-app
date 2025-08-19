@@ -12,15 +12,6 @@ export const fetchRestaurants = async () => {
   );
 };
 
-export const fetchRestaurantTables = async (restaurantId) => {
-  return await fetchDefault(
-    `${BACKEND_API_URL}/restaurant-management/restaurant/${restaurantId}/tables/`,
-    {
-      headers: HEADERS,
-    }
-  );
-};
-
 export const fetchTables = async () => {
   return await fetchDefault(`${BACKEND_API_URL}/restaurant-management/table/`, {
     headers: HEADERS,
