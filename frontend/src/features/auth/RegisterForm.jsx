@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerThunk } from "./authThunk";
+import FIELD_TYPE from "../../enums/fieldType";
 import Form from "../../components/Form";
 
 const RegisterForm = () => {
@@ -12,9 +13,27 @@ const RegisterForm = () => {
   const navigate = useNavigate();
 
   const fields = [
-    { name: "username", label: "Username", type: "text", required: true },
-    { name: "email", label: "Email", type: "email", required: true },
-    { name: "password", label: "Password", type: "password", required: true },
+    {
+      type: FIELD_TYPE.INPUT,
+      name: "username",
+      label: "Username",
+      inputType: "text",
+      required: true,
+    },
+    {
+      type: FIELD_TYPE.INPUT,
+      name: "email",
+      label: "Email",
+      inputType: "email",
+      required: true,
+    },
+    {
+      type: FIELD_TYPE.INPUT,
+      name: "password",
+      label: "Password",
+      inputType: "password",
+      required: true,
+    },
   ];
 
   const onFormSubmit = async (data) => {

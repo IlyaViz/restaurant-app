@@ -11,6 +11,7 @@ import {
   createCategoryThunk,
 } from "./menuManagementThunk";
 import CONTROL_TYPE from "../../enums/controlType";
+import FIELD_TYPE from "../../enums/fieldType";
 import MenuList from "../../components/MenuList";
 import Form from "../../components/Form";
 import Button from "../../components/Button";
@@ -38,63 +39,64 @@ const MenuManagement = () => {
 
   const productFields = [
     {
+      type: FIELD_TYPE.INPUT,
       name: "name",
-      type: "text",
+      inputType: "text",
       value: productValues.name || "",
       label: "Product Name",
       required: true,
     },
     {
       name: "price",
-      type: "number",
+      type: FIELD_TYPE.INPUT,
+      inputType: "number",
       value: productValues.price || "",
       label: "Product Price",
       required: true,
     },
     {
+      type: FIELD_TYPE.INPUT,
       name: "description",
-      type: "text",
+      inputType: "text",
       value: productValues.description || "",
       label: "Product Description",
     },
     {
+      type: FIELD_TYPE.INPUT,
       name: "image",
-      type: "file",
+      inputType: "file",
       label: "Product Image",
+    },
+    categories.length > 0 && {
+      type: FIELD_TYPE.SELECT,
+      name: "category",
+      options: [{ value: "", label: "Select Category" }].concat(
+        categories.map((category) => ({
+          value: category.id,
+          label: category.name,
+        }))
+      ),
+      selected: productValues.category || "",
     },
   ];
 
   const categoryFields = [
     {
+      type: FIELD_TYPE.INPUT,
       name: "name",
-      type: "text",
+      inputType: "text",
       value: categoryValues.name || "",
       label: "Category Name",
       required: true,
     },
     {
+      type: FIELD_TYPE.INPUT,
       name: "description",
-      type: "text",
+      inputType: "text",
       value: categoryValues.description || "",
       label: "Category Description",
     },
   ];
-
-  const productSelectors =
-    categories.length > 0
-      ? [
-          {
-            name: "category",
-            options: [{ value: "", label: "Select Category" }].concat(
-              categories.map((category) => ({
-                value: category.id,
-                label: category.name,
-              }))
-            ),
-            selected: productValues.category || "",
-          },
-        ]
-      : [];
 
   const getProductControls = (product) => {
     return [
@@ -194,7 +196,6 @@ const MenuManagement = () => {
         <div>
           <Form
             fields={productFields}
-            selectors={productSelectors}
             onFormSubmit={onProductFormSubmit}
             submitLabel={
               isEditingProduct

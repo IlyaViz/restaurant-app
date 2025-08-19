@@ -1,81 +1,106 @@
 import { useState, useEffect } from "react";
+import FIELD_TYPE from "../enums/fieldType";
 import Input from "./Input";
 import Button from "./Button";
 import Select from "./Select";
 
-const Form = ({
-  fields,
-  selectors,
-  onFormSubmit,
-  submitLabel,
-  submitStatus,
-}) => {
+const Form = ({ fields, onFormSubmit, submitLabel, submitStatus }) => {
   const getFormData = () => {
-    const formData = {};
+    const data = {};
 
-    fields?.reduce((acc, field) => {
-      if (field.type === "file") {
-        acc[field.name] = { value: "", file: null };
-      } else {
-        acc[field.name] = field.value || "";
+    fields.reduce((acc, field) => {
+      switch (field.type) {
+        case FIELD_TYPE.INPUT:
+          if (field.inputType === "file") {
+            acc[field.name] = { value: "", file: null };
+          } else {
+            acc[field.name] = field.value || "";
+          }
+
+          break;
+        case FIELD_TYPE.SELECT:
+          acc[field.name] = field.selected || "";
+
+          break;
       }
 
       return acc;
-    }, formData);
+    }, data);
 
-    selectors?.reduce((acc, selector) => {
-      acc[selector.name] = selector.selected || "";
-
-      return acc;
-    }, formData);
-
-    return formData;
+    return data;
   };
 
   const [formData, setFormData] = useState(getFormData());
 
-  const getFormDataFieldValue = (field) => {
-    if (field.type === "file") {
-      return formData[field.name].value;
-    }
+  const getValue = (field) => {
+    switch (field.type) {
+      case FIELD_TYPE.INPUT:
+        if (field.inputType === "file") {
+          return formData[field.name].value;
+        }
 
-    return formData[field.name];
+        return formData[field.name];
+      case FIELD_TYPE.SELECT:
+        return formData[field.name];
+    }
   };
 
   const onFieldChange = (e, field) => {
-    if (field.type === "file") {
-      const file = e.target.files[0];
+    switch (field.type) {
+      case FIELD_TYPE.INPUT:
+        if (field.inputType === "file") {
+          const file = e.target.files[0];
 
-      setFormData({
-        ...formData,
-        [field.name]: { value: e.target.value, file },
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [field.name]: e.target.value,
-      });
+          setFormData({
+            ...formData,
+            [field.name]: { value: e.target.value, file },
+          });
+        } else {
+          setFormData({
+            ...formData,
+            [field.name]: e.target.value,
+          });
+        }
+
+        break;
+
+      case FIELD_TYPE.SELECT:
+        setFormData({
+          ...formData,
+          [field.name]: e.target.value,
+        });
+
+        break;
     }
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
 
-    if (fields?.some((field) => field.type === "file")) {
+    if (
+      fields.some(
+        (field) => field.type === FIELD_TYPE.INPUT && field.inputType === "file"
+      )
+    ) {
       const data = new FormData();
 
       fields.forEach((field) => {
-        if (field.type === "file") {
-          if (formData[field.name].file) {
-            data.append(field.name, formData[field.name].file);
-          }
-        } else {
-          data.append(field.name, formData[field.name]);
-        }
-      });
+        switch (field.type) {
+          case FIELD_TYPE.INPUT:
+            if (field.inputType === "file") {
+              if (formData[field.name].file) {
+                data.append(field.name, formData[field.name].file);
+              }
+            } else {
+              data.append(field.name, formData[field.name]);
+            }
 
-      selectors?.forEach((selector) => {
-        data.append(selector.name, formData[selector.name]);
+            break;
+          case FIELD_TYPE.SELECT:
+            data.append(field.name, formData[field.name]);
+
+            break;
+        }
       });
 
       onFormSubmit(data);
@@ -84,9 +109,33 @@ const Form = ({
     }
   };
 
+  const renderField = (field) => {
+    switch (field.type) {
+      case FIELD_TYPE.INPUT:
+        return (
+          <Input
+            key={field.name}
+            {...field}
+            type={field.inputType}
+            value={getValue(field)}
+            onChange={(e) => onFieldChange(e, field)}
+          />
+        );
+      case FIELD_TYPE.SELECT:
+        return (
+          <Select
+            key={field.name}
+            {...field}
+            selected={getValue(field)}
+            onChange={(e) => onFieldChange(e, field)}
+          />
+        );
+    }
+  };
+
   useEffect(() => {
     setFormData(getFormData());
-  }, [fields, selectors]);
+  }, [fields]);
 
   return (
     <form
@@ -94,27 +143,7 @@ const Form = ({
       className="flex flex-col items-center justify-center"
     >
       <div className="flex flex-col gap-2">
-        {fields &&
-          fields.map((field, index) => (
-            <Input
-              key={index}
-              {...field}
-              value={getFormDataFieldValue(field)}
-              onChange={(e) => onFieldChange(e, field)}
-            />
-          ))}
-
-        {selectors &&
-          selectors.map((selector, index) => (
-            <Select
-              key={index}
-              {...selector}
-              selected={formData[selector.name]}
-              onChange={(e) =>
-                setFormData({ ...formData, [e.target.name]: e.target.value })
-              }
-            />
-          ))}
+        {fields.map((field) => renderField(field))}
 
         <Button
           type="submit"

@@ -11,6 +11,7 @@ import {
   createTableThunk,
 } from "./restaurantManagementThunk";
 import CONTROL_TYPE from "../../enums/controlType";
+import FIELD_TYPE from "../../enums/fieldType";
 import RestaurantList from "../../components/RestaurantList";
 import Form from "../../components/Form";
 import Button from "../../components/Button";
@@ -38,50 +39,57 @@ const RestaurantManagement = () => {
 
   const restaurantFields = [
     {
+      type: FIELD_TYPE.INPUT,
       name: "name",
-      type: "text",
+      inputType: "text",
       label: "Restaurant Name",
       value: restaurantValues.name || "",
       required: true,
     },
     {
+      type: FIELD_TYPE.INPUT,
       name: "location",
-      type: "text",
+      inputType: "text",
       label: "Location",
       value: restaurantValues.location || "",
       required: true,
     },
     {
-      name: "contact number",
-      type: "text",
+      type: FIELD_TYPE.INPUT,
+      name: "contact_number",
+      inputType: "text",
       label: "Contact Number",
       value: restaurantValues.contactNumber || "",
       required: true,
     },
     {
+      type: FIELD_TYPE.INPUT,
       name: "workday_open_hour",
-      type: "time",
+      inputType: "time",
       label: "Workday Open Hour",
       value: restaurantValues.workdayOpenHour || "",
       required: false,
     },
     {
+      type: FIELD_TYPE.INPUT,
       name: "workday_close_hour",
-      type: "time",
+      inputType: "time",
       label: "Workday Close Hour",
       value: restaurantValues.workdayCloseHour || "",
       required: false,
     },
     {
+      type: FIELD_TYPE.INPUT,
       name: "weekend_open_hour",
-      type: "time",
+      inputType: "time",
       label: "Weekend Open Hour",
       value: restaurantValues.weekendOpenHour || "",
       required: false,
     },
     {
+      type: FIELD_TYPE.INPUT,
       name: "weekend_close_hour",
-      type: "time",
+      inputType: "time",
       label: "Weekend Close Hour",
       value: restaurantValues.weekendCloseHour || "",
       required: false,
@@ -90,18 +98,16 @@ const RestaurantManagement = () => {
 
   const tableFields = [
     {
+      type: FIELD_TYPE.INPUT,
       name: "number",
-      type: "number",
+      inputType: "number",
       label: "Table Number",
       value: tableValues.number || "",
       required: true,
     },
-  ];
-
-  const tableSelectors = [
     {
+      type: FIELD_TYPE.SELECT,
       name: "restaurant",
-      label: "Restaurant",
       options: [{ value: "", label: "Select a restaurant" }].concat(
         restaurants.map((restaurant) => ({
           value: restaurant.id,
@@ -248,7 +254,6 @@ const RestaurantManagement = () => {
         <div>
           <Form
             fields={tableFields}
-            selectors={tableSelectors}
             onFormSubmit={onTableFormSubmit}
             submitLabel={
               isEditingTable

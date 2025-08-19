@@ -16,7 +16,9 @@ const Toast = () => {
   switch (type) {
     case TOAST_TYPE.ERROR:
       color = "bg-red-500 text-white";
+      
       messageToDisplay = errorToMessage(message);
+      
       break;
   }
 
