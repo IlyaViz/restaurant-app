@@ -2,17 +2,24 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   fetchActiveOrderThunk,
   fetchRestaurantsThunk,
+  fetchParticipantsThunk,
   fetchTablesThunk,
+  fetchOrderThunk,
   updateOrderProductStatusThunk,
+  updateOrderParticipantsThunk,
   deleteOrderThunk,
   createOrderThunk,
   fetchOrderProductsThunk,
   removeOrderProductThunk,
   addOrderProductThunk,
+  searchPossibleParticipantsThunk,
 } from "./customerOrderThunk";
 
 const initialState = {
   order: null,
+  joinedOrderId: null,
+  participants: [],
+  possibleParticipants: [],
   orderProducts: [],
   restaurants: [],
   tables: [],
@@ -32,11 +39,19 @@ const initialState = {
     loading: false,
     error: null,
   },
-  createOrderStatus: {
+  fetchOrderProductsStatus: {
     loading: false,
     error: null,
   },
-  fetchOrderProductsStatus: {
+  fetchParticipantsStatus: {
+    loading: false,
+    error: null,
+  },
+  fetchOrderStatus: {
+    loading: false,
+    error: null,
+  },
+  createOrderStatus: {
     loading: false,
     error: null,
   },
@@ -52,11 +67,24 @@ const initialState = {
     loading: false,
     error: null,
   },
+  updateOrderParticipantsStatus: {
+    loading: false,
+    error: null,
+  },
+  searchPossibleParticipantsStatus: {
+    loading: false,
+    error: null,
+  },
 };
 
 const customerOrderSlice = createSlice({
   name: "customerOrder",
   initialState,
+  reducers: {
+    joinOrder(state, action) {
+      state.joinedOrderId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(addOrderProductThunk.pending, (state) => {
@@ -112,12 +140,40 @@ const customerOrderSlice = createSlice({
         state.fetchTablesStatus.error = action.payload;
       })
 
+      .addCase(fetchParticipantsThunk.pending, (state) => {
+        state.fetchParticipantsStatus.loading = true;
+        state.fetchParticipantsStatus.error = null;
+      })
+      .addCase(fetchParticipantsThunk.fulfilled, (state, action) => {
+        state.participants = action.payload;
+        state.fetchParticipantsStatus.loading = false;
+      })
+      .addCase(fetchParticipantsThunk.rejected, (state, action) => {
+        state.fetchParticipantsStatus.loading = false;
+        state.fetchParticipantsStatus.error = action.payload;
+      })
+
+      .addCase(fetchOrderThunk.pending, (state) => {
+        state.fetchOrderStatus.loading = true;
+        state.fetchOrderStatus.error = null;
+      })
+      .addCase(fetchOrderThunk.fulfilled, (state, action) => {
+        state.order = action.payload;
+        state.fetchOrderStatus.loading = false;
+      })
+      .addCase(fetchOrderThunk.rejected, (state, action) => {
+        state.order = null;
+        state.fetchOrderStatus.loading = false;
+        state.fetchOrderStatus.error = action.payload;
+      })
+
       .addCase(createOrderThunk.pending, (state) => {
         state.createOrderStatus.loading = true;
         state.createOrderStatus.error = null;
       })
       .addCase(createOrderThunk.fulfilled, (state, action) => {
         state.order = action.payload;
+        state.joinedOrderId = null;
         state.createOrderStatus.loading = false;
       })
       .addCase(createOrderThunk.rejected, (state, action) => {
@@ -186,8 +242,41 @@ const customerOrderSlice = createSlice({
       .addCase(updateOrderProductStatusThunk.rejected, (state, action) => {
         state.updateOrderProductStatus.loading = false;
         state.updateOrderProductStatus.error = action.payload;
+      })
+
+      .addCase(updateOrderParticipantsThunk.pending, (state) => {
+        state.updateOrderParticipantsStatus.loading = true;
+        state.updateOrderParticipantsStatus.error = null;
+      })
+      .addCase(updateOrderParticipantsThunk.fulfilled, (state, action) => {
+        state.order = action.payload;
+
+        state.participants = state.participants.filter((participant) =>
+          action.payload.participants.includes(participant.id)
+        );
+
+        state.updateOrderParticipantsStatus.loading = false;
+      })
+      .addCase(updateOrderParticipantsThunk.rejected, (state, action) => {
+        state.updateOrderParticipantsStatus.loading = false;
+        state.updateOrderParticipantsStatus.error = action.payload;
+      })
+
+      .addCase(searchPossibleParticipantsThunk.pending, (state) => {
+        state.searchPossibleParticipantsStatus.loading = true;
+        state.searchPossibleParticipantsStatus.error = null;
+      })
+      .addCase(searchPossibleParticipantsThunk.fulfilled, (state, action) => {
+        state.possibleParticipants = action.payload.results;
+        state.searchPossibleParticipantsStatus.loading = false;
+        state.searchPossibleParticipantsStatus.data = action.payload;
+      })
+      .addCase(searchPossibleParticipantsThunk.rejected, (state, action) => {
+        state.searchPossibleParticipantsStatus.loading = false;
+        state.searchPossibleParticipantsStatus.error = action.payload;
       });
   },
 });
 
+export const { joinOrder } = customerOrderSlice.actions;
 export default customerOrderSlice.reducer;

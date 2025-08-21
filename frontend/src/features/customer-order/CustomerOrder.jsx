@@ -1,117 +1,43 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  fetchOrderProductsThunk,
-  fetchActiveOrderThunk,
-  deleteOrderThunk,
-  removeOrderProductThunk,
-  updateOrderProductStatusThunk,
-} from "./customerOrderThunk";
-import { INACTIVE_ORDER_STATUSES } from "../../constants/order";
-import {
-  FETCH_ORDER_INTERVAL,
-  FETCH_ORDER_PRODUCTS_INTERVAL,
-} from "../../constants/time";
-import CONTROL_TYPE from "../../enums/controlType";
-import getOrderProductStatusOptions from "../../utils/getOrderProductStatusOptions";
-import isOrderDeletable from "../../utils/isOrderDeletable";
-import OrderDisplay from "../../components/OrderDisplay";
+import { fetchActiveOrderThunk, fetchOrderThunk } from "./customerOrderThunk";
+import OrderOwn from "./OrderOwn";
+import OrderParticipation from "./OrderParticipation";
 import OrderCreator from "./OrderCreator";
+import useStatusesToast from "../../hooks/useStatusesToast";
 
 const CustomerOrder = () => {
-  const {
-    order,
-    orderProducts,
-    removeOrderProductStatus,
-    deleteOrderStatus,
-    updateOrderProductStatus,
-  } = useSelector((state) => state.customerOrder);
+  const { order, joinedOrderId, fetchOrderStatus } = useSelector(
+    (state) => state.customerOrder
+  );
+
+  useStatusesToast([fetchOrderStatus]);
 
   const dispatch = useDispatch();
 
-  const orderControls = isOrderDeletable(orderProducts)
-    ? [
-        {
-          type: CONTROL_TYPE.BUTTON,
-          label: "Delete Order",
-          onClick: () => dispatch(deleteOrderThunk(order.id)),
-          className: "btn-danger",
-          status: deleteOrderStatus,
-        },
-      ]
-    : [];
-
-  const isOrderProductRemovable = (orderProduct) => {
-    return INACTIVE_ORDER_STATUSES.includes(orderProduct.status);
-  };
-
-  const getOrderProductControls = (orderProduct) => {
-    const controls = [];
-
-    controls.push({
-      type: CONTROL_TYPE.SELECT,
-      label: "Change Status",
-      options: getOrderProductStatusOptions(orderProduct),
-      selected: orderProduct.status,
-      status: updateOrderProductStatus,
-      onChange: (e) =>
-        dispatch(
-          updateOrderProductStatusThunk({
-            orderProductId: orderProduct.id,
-            status: e.target.value,
-          })
-        ),
-    });
-
-    if (isOrderProductRemovable(orderProduct)) {
-      controls.push({
-        type: CONTROL_TYPE.BUTTON,
-        label: "Remove",
-        onClick: () => dispatch(removeOrderProductThunk(orderProduct.id)),
-        className: "btn-danger",
-        status: removeOrderProductStatus,
-      });
-    }
-
-    return controls;
-  };
-
   useEffect(() => {
     dispatch(fetchActiveOrderThunk());
-
-    const interval = setInterval(() => {
-      dispatch(fetchActiveOrderThunk());
-    }, FETCH_ORDER_INTERVAL);
-
-    return () => clearInterval(interval);
   }, [dispatch]);
 
   useEffect(() => {
-    if (!order) return;
+    if (!joinedOrderId) return;
 
-    dispatch(fetchOrderProductsThunk(order.id));
+    dispatch(fetchOrderThunk(joinedOrderId));
+  }, [dispatch, joinedOrderId]);
 
-    const interval = setInterval(() => {
-      dispatch(fetchOrderProductsThunk(order.id));
-    }, FETCH_ORDER_PRODUCTS_INTERVAL);
+  const render = () => {
+    if (joinedOrderId && order) {
+      return <OrderParticipation />;
+    }
 
-    return () => clearInterval(interval);
-  }, [order?.id, dispatch]);
+    if (!joinedOrderId && order) {
+      return <OrderOwn />;
+    }
 
-  return (
-    <>
-      {order && orderProducts ? (
-        <OrderDisplay
-          order={order}
-          orderProducts={orderProducts}
-          orderControls={orderControls}
-          getOrderProductControls={getOrderProductControls}
-        />
-      ) : (
-        <OrderCreator />
-      )}
-    </>
-  );
+    return <OrderCreator />;
+  };
+
+  return render();
 };
 
 export default CustomerOrder;

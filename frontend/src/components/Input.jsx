@@ -1,6 +1,15 @@
 import useStatusesToast from "../hooks/useStatusesToast";
 
-const Input = ({ name, type, value, label, required, onChange, status }) => {
+const Input = ({
+  name,
+  type,
+  value,
+  placeholder,
+  label,
+  required,
+  onChange,
+  status,
+}) => {
   useStatusesToast([status]);
 
   return (
@@ -9,6 +18,7 @@ const Input = ({ name, type, value, label, required, onChange, status }) => {
       <input
         name={name}
         value={value}
+        placeholder={placeholder}
         onChange={onChange}
         type={type}
         required={required}

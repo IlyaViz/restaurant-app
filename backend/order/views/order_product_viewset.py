@@ -1,10 +1,9 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
-from account.models import KitchenStaff
 from order.serializers.order_product_serializer import OrderProductSerializer
 from order.permissions.order_update_permission import CanUpdateOrderProduct
-from order.permissions.general_permission import IsOrderProductOwner
+from order.permissions.general_permission import IsOrderProductOwnerOrOrderOwner
 from order.models import OrderProduct
 from order.permissions.order_list_permission import CanListOrderProduct
 
@@ -26,7 +25,7 @@ class OrderProductViewSet(ModelViewSet):
         if self.action == "create":
             return [IsAuthenticated()]
 
-        return [IsAuthenticated(), IsOrderProductOwner()]
+        return [IsAuthenticated(), IsOrderProductOwnerOrOrderOwner()]
 
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user, status=OrderProduct.Status.DRAFT)

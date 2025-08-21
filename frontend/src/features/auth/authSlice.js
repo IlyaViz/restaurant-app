@@ -20,6 +20,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout: (state) => {
+      state.id = null;
       state.username = null;
       state.token = null;
       state.role = null;
@@ -32,6 +33,7 @@ const authSlice = createSlice({
         state.loginStatus.error = null;
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
+        state.id = action.payload.id;
         state.username = action.payload.username;
         state.token = action.payload.token;
         state.role = action.payload.role;

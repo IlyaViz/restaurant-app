@@ -1,4 +1,5 @@
 const USER_ROLE = {
+  USER: "user",
   CUSTOMER: "customer",
   KITCHEN_STAFF: "kitchen_staff",
   MANAGER: "manager",

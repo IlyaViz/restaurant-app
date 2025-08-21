@@ -1,13 +1,19 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
+  fetchOrderProducts,
+  fetchActiveOrder,
   addOrderProduct,
   removeOrderProduct,
-  fetchActiveOrder,
   createOrder,
   updateOrderProductStatus,
+  updateOrderParticipants,
   deleteOrder,
-  fetchOrderProducts,
+  fetchOrder,
 } from "../../api/orderApi";
+import {
+  searchUserByPartialUsername,
+  fetchParticipants,
+} from "../../api/userApi";
 import { fetchRestaurants, fetchTables } from "../../api/restaurantApi";
 
 export const addOrderProductThunk = createAsyncThunk(
@@ -71,6 +77,32 @@ export const fetchTablesThunk = createAsyncThunk(
   }
 );
 
+export const fetchOrderThunk = createAsyncThunk(
+  "customerOrder/fetchOrder",
+  async (orderId, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().auth.token;
+
+      return await fetchOrder(orderId, token);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const fetchParticipantsThunk = createAsyncThunk(
+  "customerOrder/fetchParticipants",
+  async (orderId, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().auth.token;
+
+      return await fetchParticipants(orderId, token);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const createOrderThunk = createAsyncThunk(
   "customerOrder/createOrder",
   async (tableId, { rejectWithValue, getState }) => {
@@ -97,6 +129,19 @@ export const updateOrderProductStatusThunk = createAsyncThunk(
   }
 );
 
+export const updateOrderParticipantsThunk = createAsyncThunk(
+  "customerOrder/updateOrderParticipants",
+  async ({ orderId, participantIds }, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().auth.token;
+
+      return await updateOrderParticipants({ orderId, participantIds }, token);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 export const deleteOrderThunk = createAsyncThunk(
   "customerOrder/deleteOrder",
   async (orderId, { rejectWithValue, getState }) => {
@@ -117,6 +162,22 @@ export const fetchOrderProductsThunk = createAsyncThunk(
       const token = getState().auth.token;
 
       return await fetchOrderProducts(orderId, token);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const searchPossibleParticipantsThunk = createAsyncThunk(
+  "customerOrder/searchPossibleParticipants",
+  async ({ role, partialUsername }, { rejectWithValue, getState }) => {
+    try {
+      const token = getState().auth.token;
+
+      return await searchUserByPartialUsername(
+        { role, partialUsername },
+        token
+      );
     } catch (error) {
       return rejectWithValue(error.message);
     }

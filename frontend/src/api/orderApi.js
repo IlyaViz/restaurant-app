@@ -2,18 +2,36 @@ import { BACKEND_API_URL } from "../constants/settings";
 import { getAuthHeaders } from "../utils/getHeaders";
 import fetchDefault from "../utils/fetchDefault";
 
-export const deleteOrder = async (orderId, token) => {
-  await fetchDefault(`${BACKEND_API_URL}/order-management/order/${orderId}/`, {
-    method: "DELETE",
-    headers: getAuthHeaders(token),
-  });
-
-  return orderId;
-};
-
 export const fetchOrderProducts = async (orderId, token) => {
   return await fetchDefault(
     `${BACKEND_API_URL}/order-management/order/${orderId}/order-products/`,
+    {
+      headers: getAuthHeaders(token),
+    }
+  );
+};
+
+export const fetchActiveOrders = async (token) => {
+  return await fetchDefault(
+    `${BACKEND_API_URL}/order-management/order/active-orders/`,
+    {
+      headers: getAuthHeaders(token),
+    }
+  );
+};
+
+export const fetchActiveOrder = async (token) => {
+  return await fetchDefault(
+    `${BACKEND_API_URL}/order-management/order/active-order/`,
+    {
+      headers: getAuthHeaders(token),
+    }
+  );
+};
+
+export const fetchOrder = async (orderId, token) => {
+  return await fetchDefault(
+    `${BACKEND_API_URL}/order-management/order/${orderId}/`,
     {
       headers: getAuthHeaders(token),
     }
@@ -34,11 +52,16 @@ export const updateOrderProductStatus = async (
   );
 };
 
-export const fetchActiveOrders = async (token) => {
+export const updateOrderParticipants = async (
+  { orderId, participantIds },
+  token
+) => {
   return await fetchDefault(
-    `${BACKEND_API_URL}/order-management/order/active-orders/`,
+    `${BACKEND_API_URL}/order-management/order/${orderId}/`,
     {
+      method: "PATCH",
       headers: getAuthHeaders(token),
+      body: JSON.stringify({ participants: participantIds }),
     }
   );
 };
@@ -66,13 +89,13 @@ export const removeOrderProduct = async (orderProductId, token) => {
   return orderProductId;
 };
 
-export const fetchActiveOrder = async (token) => {
-  return await fetchDefault(
-    `${BACKEND_API_URL}/order-management/order/active-order/`,
-    {
-      headers: getAuthHeaders(token),
-    }
-  );
+export const deleteOrder = async (orderId, token) => {
+  await fetchDefault(`${BACKEND_API_URL}/order-management/order/${orderId}/`, {
+    method: "DELETE",
+    headers: getAuthHeaders(token),
+  });
+
+  return orderId;
 };
 
 export const createOrder = async (tableId, token) => {

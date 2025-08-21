@@ -6,7 +6,7 @@ from account.views.customer_viewset import CustomerViewSet
 from account.views.custom_obtain_auth_token_view import CustomObtainAuthToken
 from account.views.user_create_view import UserCreateView
 from account.views.kitchen_staff_work_viewset import KitchenStaffProfileViewSet
-
+from account.views.user_list_view import UserListView
 
 router = DefaultRouter()
 router.register(r"kitchen-staff", KitchenStaffViewSet)
@@ -17,4 +17,5 @@ router.register(r"manager", ManagerViewSet)
 urlpatterns = [
     path("obtain-token/", CustomObtainAuthToken.as_view(), name="account-obtain-token"),
     path("register/", UserCreateView.as_view(), name="account-register"),
+    path("user/", UserListView.as_view(), name="account-user"),
 ] + router.urls

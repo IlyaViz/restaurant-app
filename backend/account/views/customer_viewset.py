@@ -1,8 +1,8 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import LimitOffsetPagination
 from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
+from common.pagination import LimitOffsetPaginationWithMaxLimit
 from account.serializers.user_serializer import UserSerializer
 from account.permissions.customer_permission import CanManageCustomer, CanListCustomer
 
@@ -15,7 +15,7 @@ class CustomerViewSet(ModelViewSet):
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {"username": ["icontains"]}
-    pagination_class = LimitOffsetPagination
+    pagination_class = LimitOffsetPaginationWithMaxLimit
 
     def get_permissions(self):
         if self.action in [

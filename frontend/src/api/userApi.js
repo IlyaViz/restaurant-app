@@ -1,11 +1,19 @@
 import { BACKEND_API_URL } from "../constants/settings";
 import { getAuthHeaders } from "../utils/getHeaders";
-import { CUSTOMER_LIMIT } from "../constants/limit";
 import fetchDefault from "../utils/fetchDefault";
 
 export const fetchUsers = async (userRole, token) => {
   return await fetchDefault(
     `${BACKEND_API_URL}/account-management/${userRole}`,
+    {
+      headers: getAuthHeaders(token),
+    }
+  );
+};
+
+export const fetchParticipants = async (orderId, token) => {
+  return await fetchDefault(
+    `${BACKEND_API_URL}/order-management/order/${orderId}/participants/`,
     {
       headers: getAuthHeaders(token),
     }
@@ -28,7 +36,7 @@ export const searchUserByPartialUsername = async (
   token
 ) => {
   return await fetchDefault(
-    `${BACKEND_API_URL}/account-management/${role}?username__icontains=${partialUsername}&limit=${CUSTOMER_LIMIT}`,
+    `${BACKEND_API_URL}/account-management/${role}?username__icontains=${partialUsername}`,
     {
       headers: getAuthHeaders(token),
     }

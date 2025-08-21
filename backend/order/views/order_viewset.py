@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from account.models import KitchenStaff
+from account.serializers.user_serializer import UserSerializer
 from order.serializers.order_serializer import OrderSerializer
 from order.serializers.order_product_serializer import OrderProductSerializer
 from order.models import Order
@@ -13,7 +14,7 @@ from order.permissions.order_list_permission import (
     CanListConcreteOrderOrderProducts,
 )
 from order.permissions.order_destroy_permission import CanDestroyOrder
-from order.permissions.general_permission import IsOrderOwner
+from order.permissions.general_permission import IsOrderOwnerOrParticipant
 from order.permissions.order_update_permission import CanUpdateOrder
 
 
@@ -37,7 +38,7 @@ class OrderViewSet(ModelViewSet):
         if self.action == "order_products":
             return [IsAuthenticated(), CanListConcreteOrderOrderProducts()]
 
-        return [IsAuthenticated(), IsOrderOwner()]
+        return [IsAuthenticated(), IsOrderOwnerOrParticipant()]
 
     def perform_create(self, serializer):
         serializer.save(customer=self.request.user)
@@ -93,5 +94,15 @@ class OrderViewSet(ModelViewSet):
         serializer = OrderProductSerializer(
             order_products, many=True, context=self.get_serializer_context()
         )
+
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["get"], url_path="participants")
+    def participants(self, request, pk=None):
+        order = self.get_object()
+
+        participants = order.participants.all()
+
+        serializer = UserSerializer(participants, many=True)
 
         return Response(serializer.data)
