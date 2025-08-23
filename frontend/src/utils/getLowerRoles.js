@@ -5,7 +5,7 @@ const getLowerRoles = (role) => {
 
   const currentRoleIndex = roles.indexOf(role);
 
-  return roles.slice(0, currentRoleIndex);
+  return roles.slice(1, currentRoleIndex);
 };
 
 export default getLowerRoles;

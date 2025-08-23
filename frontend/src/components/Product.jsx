@@ -1,7 +1,7 @@
 const Product = ({ name, price, image, imageClassName }) => {
   return (
-    <div className="flex flex-col items-center bg-blue-50 border rounded-2xl">
-      <p>${price}</p>
+    <div className="flex flex-col items-center">
+      <h1 className="text-xl font-semibold">${price}</h1>
 
       {image ? (
         <img src={image} className={`${imageClassName}`} />
@@ -12,7 +12,7 @@ const Product = ({ name, price, image, imageClassName }) => {
         />
       )}
 
-      <h3>{name}</h3>
+      <h1 className="text-lg font-medium">{name}</h1>
     </div>
   );
 };

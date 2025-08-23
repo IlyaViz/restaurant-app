@@ -111,7 +111,7 @@ const KitchenOrders = () => {
   }, [customerOrders, dispatch]);
 
   return (
-    <>
+    <div className="flex flex-col gap-4 items-center">
       {customerOrders.map((customerOrder) => (
         <OrderDisplay
           key={customerOrder.id}
@@ -121,7 +121,7 @@ const KitchenOrders = () => {
           getOrderProductControls={getCustomerOrderProductControls}
         />
       ))}
-    </>
+    </div>
   );
 };
 

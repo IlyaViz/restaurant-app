@@ -40,12 +40,15 @@ const LoginForm = () => {
   };
 
   return (
-    <Form
-      fields={fields}
-      onFormSubmit={onFormSubmit}
-      submitLabel="Login"
-      submitStatus={loginStatus}
-    />
+    <div className="flex justify-center items-center h-[75vh]">
+      <Form
+        label="Login"
+        fields={fields}
+        onFormSubmit={onFormSubmit}
+        submitLabel="Login"
+        submitStatus={loginStatus}
+      />
+    </div>
   );
 };
 

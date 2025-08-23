@@ -9,7 +9,7 @@ const Select = ({ name, required, options, selected, onChange, status }) => {
       required={required}
       value={selected}
       onChange={onChange}
-      className="text-center text-2xl"
+      className="text-center text-2xl w-full"
     >
       {options.map((option) => (
         <option key={option.value} value={option.value}>

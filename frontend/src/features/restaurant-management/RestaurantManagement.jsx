@@ -225,9 +225,10 @@ const RestaurantManagement = () => {
 
   return (
     <div className="flex flex-col gap-8 mt-4">
-      <div className="flex gap-16 justify-center">
-        <div>
+      <div className="flex flex-col justify-center gap-16 md:flex-row">
+        <div className="flex flex-col gap-1">
           <Form
+            label="Restaurant"
             fields={restaurantFields}
             onFormSubmit={onRestaurantFormSubmit}
             submitLabel={
@@ -251,8 +252,9 @@ const RestaurantManagement = () => {
           )}
         </div>
 
-        <div>
+        <div className="flex flex-col gap-1">
           <Form
+            label="Table"
             fields={tableFields}
             onFormSubmit={onTableFormSubmit}
             submitLabel={

@@ -109,8 +109,8 @@ const UserManagement = () => {
 
   return (
     <>
-      <div className="flex flex-col mt-4 gap-8">
-        <div className="flex flex-col gap-4 bg-blue-100 rounded-xl p-4">
+      <div className="flex flex-col mt-4 gap-8 bg-blue-100 p-4 rounded">
+        <div className="flex flex-col gap-4 bg-blue-200 rounded-2xl p-4">
           <SearchUser
             label="Search customer"
             onChange={onSearchChange}
@@ -125,9 +125,9 @@ const UserManagement = () => {
             getUsersByRole(userRole).length > 0 && (
               <div
                 key={userRole}
-                className="flex flex-col gap-4 bg-blue-100 rounded-xl p-4"
+                className="flex flex-col gap-4 bg-blue-200 rounded-2xl p-4"
               >
-                <h1 className="text-xl font-bold">
+                <h1 className="text-2xl text-gray-900 font-bold">
                   {USER_ROLE_LABEL[userRole]}
                 </h1>
 

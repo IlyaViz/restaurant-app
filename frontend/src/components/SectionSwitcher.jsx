@@ -5,7 +5,7 @@ const SectionSwitcher = ({ sections }) => {
   const [activeSection, setActiveSection] = useState(0);
 
   return (
-    <div className="flex flex-col items-center text-center">
+    <div className="flex flex-col gap-4 items-center text-center">
       <div className="flex flex-col">
         {sections.map((section, index) => (
           <Button
@@ -18,13 +18,7 @@ const SectionSwitcher = ({ sections }) => {
         ))}
       </div>
 
-      <div>
-        <h1 className="text-2xl font-bold mt-8">
-          {sections[activeSection].title}
-        </h1>
-
-        {sections[activeSection].component}
-      </div>
+      {sections[activeSection].component}
     </div>
   );
 };

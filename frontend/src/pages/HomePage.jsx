@@ -6,7 +6,7 @@ const HomePage = () => {
   const token = useSelector((state) => state.auth.token);
 
   return (
-    <div className="flex flex-col gap-8 text-center">
+    <div className="flex flex-col items-center gap-8 text-center">
       {token ? <CustomerOrder /> : <div>Login to create order</div>}
 
       <div className="flex flex-col items-center gap-8">

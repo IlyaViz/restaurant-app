@@ -4,7 +4,7 @@ import Input from "./Input";
 import Button from "./Button";
 import Select from "./Select";
 
-const Form = ({ fields, onFormSubmit, submitLabel, submitStatus }) => {
+const Form = ({ label, fields, onFormSubmit, submitLabel, submitStatus }) => {
   const getFormData = () => {
     const data = {};
 
@@ -140,9 +140,13 @@ const Form = ({ fields, onFormSubmit, submitLabel, submitStatus }) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col items-center justify-center"
+      className="flex flex-col items-center bg-blue-200 p-8 rounded-4xl text-sm xl:text-2xl"
     >
-      <div className="flex flex-col gap-2">
+      <h1 className="text-4xl font-bold">{label}</h1>
+
+      <hr className="w-full mt-2" />
+
+      <div className="flex flex-col gap-4 mt-8">
         {fields.map((field) => renderField(field))}
 
         <Button

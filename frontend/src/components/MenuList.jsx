@@ -12,21 +12,25 @@ const MenuList = ({
   };
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 bg-blue-100 p-4 rounded">
+      <h1 className="text-2xl text-gray-900 font-bold">Menu</h1>
+
       {categories.map(
         (category) =>
           categoryProducts(category).length > 0 && (
             <div
               key={category.id}
-              className="flex flex-col gap-4 bg-blue-100 rounded-2xl p-4"
+              className="flex flex-col gap-4 bg-blue-200 p-4 rounded-2xl"
             >
-              <h1 className="text-2xl font-bold mb-4">{category.name}</h1>
+              <h1 className="text-2xl text-gray-900 font-bold mb-4">
+                {category.name}
+              </h1>
 
               {getCategoryControls && (
                 <ActionControls controls={getCategoryControls(category)} />
               )}
 
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid md:grid-cols-2 2xl:grid-cols-4 gap-4">
                 {categoryProducts(category).map((product) => (
                   <div key={product.id} className="flex flex-col gap-2">
                     <Product {...product} imageClassName="h-36" />

@@ -15,11 +15,11 @@ const OrderDisplay = ({
   searchStatus,
 }) => {
   return (
-    <div className="flex flex-col gap-8 bg-blue-100 p-4 rounded-4xl">
+    <div className="flex flex-col gap-8 bg-blue-200 rounded-2xl w-3/4">
       <Order order={order} controls={orderControls} />
 
       {participants && (
-        <div>
+        <div className="flex flex-col gap-4">
           <hr />
 
           <OrderParticipants

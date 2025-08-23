@@ -10,9 +10,13 @@ const OrderParticipants = ({
   getOrderParticipantControls,
 }) => {
   return (
-    <div>
+    <div className="flex flex-col gap-4">
+      <h1 className="text-2xl text-gray-900 font-semibold">
+        Search Participants
+      </h1>
+
       <SearchUser
-        label="Search participants"
+        label="Customer ID"
         onChange={onSearchChange}
         status={searchStatus}
         users={possibleParticipants}
@@ -20,14 +24,20 @@ const OrderParticipants = ({
       />
 
       {participants.length !== 0 && (
-        <div>
-          <h1 className="text-xl">Order Participants</h1>
+        <>
+          <hr />
 
-          <UserList
-            users={participants}
-            getUserControls={getOrderParticipantControls}
-          />
-        </div>
+          <div>
+            <h1 className="text-2xl text-gray-900 font-semibold">
+              Order Participants
+            </h1>
+
+            <UserList
+              users={participants}
+              getUserControls={getOrderParticipantControls}
+            />
+          </div>
+        </>
       )}
     </div>
   );

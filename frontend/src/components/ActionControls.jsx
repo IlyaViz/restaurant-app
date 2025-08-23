@@ -13,7 +13,7 @@ const ActionControls = ({ controls }) => {
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-2 p-2">
       {controls && controls.map((control) => renderControl(control))}
     </div>
   );

@@ -2,10 +2,10 @@ import ActionControls from "./ActionControls";
 
 const Order = ({ order, controls }) => {
   return (
-    <div className="flex flex-col items-center">
-      <h2 className="text-2xl font-bold">Active Order (id {order.id})</h2>
-
-      <p className="text-lg">Table: {order.table}</p>
+    <div className="flex flex-col items-center mt-4">
+      <h2 className="text-2xl text-gray-900 font-semibold">
+        Active Order (id {order.id})
+      </h2>
 
       <ActionControls controls={controls} />
     </div>

@@ -14,7 +14,7 @@ const Input = ({
 
   return (
     <div className="flex flex-col items-center">
-      <label>{label}</label>
+      <label className="text-gray-900 text-xl">{label}</label>
       <input
         name={name}
         value={value}
@@ -22,7 +22,7 @@ const Input = ({
         onChange={onChange}
         type={type}
         required={required}
-        className="border"
+        className="border rounded-xl text-center duration-400 focus:outline-none focus:ring-1"
       />
     </div>
   );

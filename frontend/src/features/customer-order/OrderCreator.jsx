@@ -38,10 +38,10 @@ const OrderCreator = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex items-center justify-center gap-4">
-      <div>
-        <h1 className="text-xl">
-          Select a table in restaurant to create order
+    <div className="flex flex-col items-center justify-center gap-4 lg:flex-row">
+      <div className="flex flex-col gap-4 bg-blue-100 p-4 rounded">
+        <h1 className="text-2xl text-gray-900 font-semibold">
+          Select a table to create order
         </h1>
 
         <RestaurantList
@@ -51,11 +51,15 @@ const OrderCreator = () => {
         />
       </div>
 
-      <div>
-        <h1 className="text-xl">Join an existing order</h1>
+      <h1 className="text-xl text-gray-900 font-semibold">OR</h1>
+
+      <div className="flex flex-col gap-2 bg-blue-100 rounded p-4">
+        <h1 className="text-xl text-gray-900 font-semibold">
+          Join an existing order
+        </h1>
 
         <Input
-          placeholder="Order id"
+          label="Order ID"
           onChange={(e) => setOrderId(parseInt(e.target.value))}
         />
 

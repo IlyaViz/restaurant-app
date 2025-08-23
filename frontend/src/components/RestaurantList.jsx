@@ -15,7 +15,7 @@ const RestaurantList = ({
       {restaurants.map((restaurant) => (
         <div
           key={restaurant.id}
-          className="flex flex-col gap-4 bg-blue-100 rounded-2xl p-4"
+          className="flex flex-col gap-4 bg-blue-200 rounded-2xl p-4"
         >
           <h1 className="text-2xl font-bold">{restaurant.name}</h1>
 
@@ -25,7 +25,7 @@ const RestaurantList = ({
 
           <hr />
 
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-2 2xl:grid-cols-4 gap-4">
             {getRestaurantTables(restaurant).map((table) => (
               <div key={table.id}>
                 <div>{table.number}</div>

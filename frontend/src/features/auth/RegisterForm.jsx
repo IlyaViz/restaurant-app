@@ -47,12 +47,15 @@ const RegisterForm = () => {
   };
 
   return (
-    <Form
-      fields={fields}
-      onFormSubmit={onFormSubmit}
-      submitLabel="Register"
-      submitStatus={registerStatus}
-    />
+    <div className="flex justify-center items-center h-[75vh]">
+      <Form
+        label="Register"
+        fields={fields}
+        onFormSubmit={onFormSubmit}
+        submitLabel="Register"
+        submitStatus={registerStatus}
+      />
+    </div>
   );
 };
 

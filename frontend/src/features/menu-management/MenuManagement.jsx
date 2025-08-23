@@ -192,9 +192,10 @@ const MenuManagement = () => {
 
   return (
     <div className="flex flex-col gap-16 mt-8">
-      <div className="flex justify-center gap-16">
-        <div>
+      <div className="flex flex-col justify-center gap-16 md:flex-row">
+        <div className="flex flex-col gap-1">
           <Form
+            label="Product"
             fields={productFields}
             onFormSubmit={onProductFormSubmit}
             submitLabel={
@@ -216,8 +217,9 @@ const MenuManagement = () => {
           )}
         </div>
 
-        <div>
+        <div className="flex flex-col gap-1">
           <Form
+            label="Category"
             fields={categoryFields}
             onFormSubmit={onCategoryFormSubmit}
             submitLabel={

@@ -23,9 +23,7 @@ const Header = () => {
           <Button label="Home" className="btn-primary" />
         </NavLink>
 
-        {token ? (
-          <h1 className="text-2xl">Welcome, {username}</h1>
-        ) : (
+        {!token && (
           <NavLink to="/login">
             <Button label="Login" className="btn-primary" />
           </NavLink>
