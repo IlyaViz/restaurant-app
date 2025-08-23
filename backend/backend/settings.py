@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ["DEBUG"] == "True"
 
-ALLOWED_HOSTS = ["localhost", "backend"]
+ALLOWED_HOSTS = ["127.0.0.1", "backend"]
 
 # Application definition
 
@@ -126,11 +126,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = "static/"
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -161,7 +156,10 @@ STATIC_URL = "/backend/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Force script name
-FORCE_SCRIPT_NAME = "/backend"
+FORCE_SCRIPT_NAME = None
 
-# CSRF
+if DOMAIN:
+    FORCE_SCRIPT_NAME = "/backend"
+
+# CSRF settings
 CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN}"]

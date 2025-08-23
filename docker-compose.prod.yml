@@ -2,10 +2,8 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
-    command: /bin/sh -c "python manage.py collectstatic --noinput && gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
+      dockerfile: Dockerfile.prod
     volumes:
-      - ./backend:/app
       - static_volume:/app/static
     environment:
       - DEBUG=False
@@ -23,7 +21,7 @@ services:
   nginx:
     build:
       context: .
-      dockerfile: ./nginx/Dockerfile
+      dockerfile: ./nginx/Dockerfile.prod
       args:
         VITE_BACKEND_API_URL: https://${DOMAIN}/backend/api
         DOMAIN: ${DOMAIN}
