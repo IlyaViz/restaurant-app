@@ -1,8 +1,11 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from menu.models import Product
+from backend.settings import DEBUG
 
 
-class ProductSerializer(ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = Product
         fields = [
@@ -13,3 +16,14 @@ class ProductSerializer(ModelSerializer):
             "image",
             "category",
         ]
+
+    def get_image(self, obj):
+        if obj.image:
+            url = obj.image.url
+
+            if DEBUG and "request" in self.context:
+                return self.context["request"].build_absolute_uri(url)
+
+            return url
+
+        return None
