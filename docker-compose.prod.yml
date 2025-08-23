@@ -3,12 +3,13 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    command: ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]
     volumes:
       - ./backend:/app
-    ports:
-      - "8000:8000"
     environment:
-      - DEBUG=True
+      - DEBUG=False
+      - SECRET_KEY=${SECRET_KEY}
+      - DOMAIN=${DOMAIN}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
@@ -17,17 +18,28 @@ services:
       - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}
     depends_on:
       - postgres
-
-  frontend:
+    
+  nginx:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./nginx/Dockerfile
+      args:
+        VITE_BACKEND_API_URL: https://${DOMAIN}/backend/api
+        DOMAIN: ${DOMAIN}
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - certbot:/etc/letsencrypt
     ports:
-      - "5173:5173"
-  
+      - "80:80"
+    depends_on:
+      certbot:
+        condition: service_completed_successfully
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot:/etc/letsencrypt
+    command: ["certonly", "--standalone", "--non-interactive", "--agree-tos","-d", "${DOMAIN}"]
+
   postgres:
     image: postgres:16-alpine
     volumes:
@@ -39,3 +51,4 @@ services:
 
 volumes:
   postgres_data:
+  certbot:

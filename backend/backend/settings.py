@@ -21,13 +21,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-xzxpd)u%1_*_bq&y^^l5e*$d&93v7kyi%+ykl0==pr5^9k0e5*"
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY", "django-insecure-xzxpd)u%1_*_bq&y^^l5e*$d&93v7kyi%+ykl0==pr5^9k0e5*"
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ["DEBUG"] == "True"
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [os.environ.get("DOMAIN", "localhost")]
 
 # Application definition
 
@@ -147,7 +148,12 @@ REST_FRAMEWORK = {
 }
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:5173"]
+DOMAIN = os.environ.get("DOMAIN")
+
+if DOMAIN:
+    CORS_ALLOWED_ORIGINS = [f"https://{DOMAIN}"]
+else:
+    CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:5173"]
 
 # Media files settings
 MEDIA_URL = "/media/"

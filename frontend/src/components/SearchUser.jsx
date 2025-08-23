@@ -1,5 +1,5 @@
-import debounce from "../utils/debounce";
 import { DEBOUNCE_TIMEOUT } from "../constants/time";
+import debounce from "../utils/debounce";
 import UserList from "./UserList";
 import Input from "./Input";
 

@@ -1,0 +1,22 @@
+FROM node:20-slim
+
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
+
+WORKDIR /app
+COPY /frontend .
+
+RUN npm install
+RUN npm run build
+
+FROM nginx:1.28
+
+COPY --from=0 /app/dist /usr/share/nginx/html
+COPY /nginx/nginx.conf.template /etc/nginx/nginx.conf.template
+
+ARG DOMAIN
+ENV DOMAIN=$DOMAIN
+
+RUN envsubst '${DOMAIN}' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf
+
+CMD ["nginx", "-g", "daemon off;"]

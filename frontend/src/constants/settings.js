@@ -1,2 +1,2 @@
 export const BACKEND_API_URL =
-  import.meta.env.BACKEND_API_URL || "http://localhost:8000/api";
+  import.meta.env.VITE_BACKEND_API_URL || "http://localhost:8000/api";
