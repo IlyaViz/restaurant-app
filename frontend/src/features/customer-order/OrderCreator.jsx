@@ -11,9 +11,13 @@ import Button from "../../components/Button";
 const OrderCreator = () => {
   const [orderId, setOrderId] = useState("");
 
-  const { restaurants, tables, createOrderStatus } = useSelector(
-    (state) => state.customerOrder
-  );
+  const {
+    restaurants,
+    tables,
+    createOrderStatus,
+    fetchRestaurantsStatus,
+    fetchTablesStatus,
+  } = useSelector((state) => state.customerOrder);
 
   const dispatch = useDispatch();
 
@@ -43,6 +47,14 @@ const OrderCreator = () => {
         <h1 className="text-2xl text-gray-900 font-semibold">
           Select a table to create order
         </h1>
+
+        {(fetchRestaurantsStatus.loading || fetchTablesStatus.loading) && (
+          <h1 className="text-gray-500">Loading restaurants and tables...</h1>
+        )}
+
+        {(fetchRestaurantsStatus.error || fetchTablesStatus.error) && (
+          <h1 className="text-red-500">Error loading restaurants and tables</h1>
+        )}
 
         <RestaurantList
           restaurants={restaurants}
