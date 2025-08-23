@@ -29,7 +29,7 @@ services:
     volumes:
       - certbot:/etc/letsencrypt
     ports:
-      - "80:80"
+      - "443:443"
     depends_on:
       certbot:
         condition: service_completed_successfully
@@ -39,6 +39,8 @@ services:
     volumes:
       - certbot:/etc/letsencrypt
     command: ["certonly", "--standalone", "--non-interactive", "--agree-tos","-d", "${DOMAIN}"]
+    ports:
+      - "80:80"
 
   postgres:
     image: postgres:16-alpine
