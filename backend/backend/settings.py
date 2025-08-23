@@ -148,11 +148,11 @@ DOMAIN = os.environ.get("DOMAIN")
 CORS_ALLOWED_ORIGINS = [f"https://{DOMAIN}", "http://127.0.0.1:5173"]
 
 # Media files settings
-MEDIA_URL = "/backend/media/"
+MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Static files settings
-STATIC_URL = "/backend/static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Force script name

@@ -282,7 +282,7 @@ const RestaurantManagement = () => {
       )}
 
       {(fetchRestaurantsStatus.error || fetchTablesStatus.error) && (
-        <p>Error loading restaurants and tables</p>
+        <p className="text-red-500">Error loading restaurants and tables</p>
       )}
 
       <RestaurantList

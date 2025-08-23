@@ -13,8 +13,12 @@ http {
             try_files $uri $uri/ /index.html;
         }
 
-        location /backend/static/ {
+        location /static/ {
             alias /static/;
+        }
+
+        location /media/ {
+            alias /media/;
         }
 
         location /backend/ {

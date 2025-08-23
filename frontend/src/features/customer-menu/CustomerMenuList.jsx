@@ -43,11 +43,11 @@ const CustomerMenuList = () => {
   return (
     <>
       {(fetchProductsStatus.loading || fetchCategoriesStatus.loading) && (
-        <div>Loading products and categories...</div>
+        <p className="text-gray-500">Loading products and categories...</p>
       )}
 
       {(fetchProductsStatus.error || fetchCategoriesStatus.error) && (
-        <p>Error loading products and categories</p>
+        <p className="text-red-500">Error loading products and categories</p>
       )}
 
       <MenuList

@@ -243,11 +243,11 @@ const MenuManagement = () => {
       </div>
 
       {(fetchProductsStatus.loading || fetchCategoriesStatus.loading) && (
-        <div>Loading products and categories...</div>
+        <p>Loading products and categories...</p>
       )}
 
       {(fetchProductsStatus.error || fetchCategoriesStatus.error) && (
-        <p>Error loading products and categories</p>
+        <p className="text-red-500">Error loading products and categories</p>
       )}
 
       <MenuList
