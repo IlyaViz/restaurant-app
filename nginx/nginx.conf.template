@@ -14,7 +14,7 @@ http {
         }
 
         location /backend/static/ {
-            alias /static/
+            alias /static/;
         }
 
         location /backend/ {
