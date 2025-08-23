@@ -44,10 +44,10 @@ const MenuList = ({
       )}
 
       {products.some((product) => !product.category) && (
-        <div className="flex flex-col gap-4 bg-blue-100 rounded-2xl p-4">
-          <h2 className="text-xl font-bold mb-4">Other</h2>
+        <div className="flex flex-col gap-4 bg-blue-200 p-4 rounded-2xl">
+          <h1 className="text-2xl text-gray-900 font-bold mb-4">Other</h1>
 
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 2xl:grid-cols-4 gap-4">
             {products
               .filter((product) => !product.category)
               .map((product) => (
