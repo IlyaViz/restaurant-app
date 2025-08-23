@@ -1,4 +1,4 @@
-import { snakeObjectToCamelCase } from "../utils/snakeToCamelCase";
+import { recursiveSnakeToCamel } from "../utils/snakeToCamelCase";
 import errorToMessage from "./errorToMessage";
 
 const fetchDefault = async (url, options) => {
@@ -17,11 +17,7 @@ const fetchDefault = async (url, options) => {
 
   const result = await response.json();
 
-  if (Array.isArray(result)) {
-    return result.map(snakeObjectToCamelCase);
-  }
-
-  return snakeObjectToCamelCase(result);
+  return recursiveSnakeToCamel(result);
 };
 
 export default fetchDefault;

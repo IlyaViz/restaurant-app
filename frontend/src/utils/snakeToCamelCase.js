@@ -16,3 +16,18 @@ export const snakeObjectToCamelCase = (obj) => {
 
   return newObj;
 };
+
+export const recursiveSnakeToCamel = (data) => {
+  if (Array.isArray(data)) {
+    return data.map(recursiveSnakeToCamel);
+  } else if (data !== null && typeof data === "object") {
+    const converted = snakeObjectToCamelCase(data);
+
+    for (const key in converted) {
+      converted[key] = recursiveSnakeToCamel(converted[key]);
+    }
+
+    return converted;
+  }
+  return data;
+};
