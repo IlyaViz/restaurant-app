@@ -15,9 +15,7 @@ class OrderProductSerializer(ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
 
-        representation["product"] = ProductSerializer(
-            instance.product, context=self.context
-        ).data
+        representation["product"] = ProductSerializer(instance.product).data
 
         return representation
 
