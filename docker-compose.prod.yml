@@ -3,9 +3,10 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    command: ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]
+    command: /bin/sh -c "python manage.py collectstatic --noinput && gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - ./backend:/app
+      - static_volume:/app/static
     environment:
       - DEBUG=False
       - SECRET_KEY=${SECRET_KEY}
@@ -28,9 +29,12 @@ services:
         DOMAIN: ${DOMAIN}
     volumes:
       - certbot:/etc/letsencrypt
+      - static_volume:/static
     ports:
       - "443:443"
     depends_on:
+      backend:
+        condition: service_started
       certbot:
         condition: service_completed_successfully
 
@@ -54,3 +58,4 @@ services:
 volumes:
   postgres_data:
   certbot:
+  static_volume:

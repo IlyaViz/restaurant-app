@@ -150,11 +150,18 @@ REST_FRAMEWORK = {
 # CORS settings
 DOMAIN = os.environ.get("DOMAIN")
 
-if DOMAIN:
-    CORS_ALLOWED_ORIGINS = [f"https://{DOMAIN}"]
-else:
-    CORS_ALLOWED_ORIGINS = ["http://127.0.0.1:5173"]
+CORS_ALLOWED_ORIGINS = [f"https://{DOMAIN}", "http://127.0.0.1:5173"]
 
 # Media files settings
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+# Static files settings
+STATIC_URL = "/backend/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# Force script name
+FORCE_SCRIPT_NAME = "/backend"
+
+# CSRF
+CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN}"]
