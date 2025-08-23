@@ -23,6 +23,8 @@ class CategoryViewSet(ModelViewSet):
         instance = self.get_object()
 
         products = Product.active_objects.filter(category=instance)
-        serializer = ProductSerializer(products, many=True)
+        serializer = ProductSerializer(
+            products, many=True, context=self.get_serializer_context()
+        )
 
         return Response(serializer.data)

@@ -1,10 +1,10 @@
-const Product = ({ name, price, image, imageClassName }) => {
+const Product = ({ name, price, imageUrl, imageClassName }) => {
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-xl font-semibold">${price}</h1>
 
-      {image ? (
-        <img src={image} className={`${imageClassName}`} />
+      {imageUrl ? (
+        <img src={imageUrl} className={`${imageClassName}`} />
       ) : (
         <img
           src="https://www.shutterstock.com/image-vector/default-ui-image-placeholder-wireframes-600nw-1037719192.jpg"
